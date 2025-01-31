@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 
 export default function Landing() {
   return (
@@ -9,7 +10,9 @@ export default function Landing() {
       <header className="fixed left-0 right-0 top-0 z-50 border-b bg-background/80 backdrop-blur-sm">
         <div className="container mx-auto flex items-center justify-between px-4 py-4">
           <div className="text-2xl font-bold">Incident</div>
-          <Button>Sign In</Button>
+          <Button asChild>
+            <Link to="/auth">Sign In</Link>
+          </Button>
         </div>
       </header>
 
@@ -241,7 +244,7 @@ export default function Landing() {
             </div>
           </div>
           <div className="mt-12 text-center text-muted-foreground">
-            © 2023 Incident. All rights reserved.
+            © 2025 Incident. All rights reserved.
           </div>
         </div>
       </footer>
