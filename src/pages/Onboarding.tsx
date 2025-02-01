@@ -1,7 +1,7 @@
 import { OrganizationList, UserButton } from "@clerk/clerk-react";
 import { dark } from "@clerk/themes";
 
-export default function SelectAccount() {
+export default function Onboarding() {
   return (
     <div className="flex h-screen flex-col bg-black text-white">
       {/* Top Navigation */}
