@@ -1,6 +1,6 @@
 import { SignIn } from "@clerk/clerk-react";
 import { dark } from "@clerk/themes";
-const Auth = () => {
+const Login = () => {
   return (
     <div className="flex h-screen flex-col items-center justify-center gap-y-5 bg-[#111111] py-2">
       <SignIn appearance={{ baseTheme: dark }} />
@@ -8,4 +8,4 @@ const Auth = () => {
   );
 };
 
-export default Auth;
+export default Login;

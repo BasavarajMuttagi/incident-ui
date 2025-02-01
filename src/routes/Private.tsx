@@ -8,7 +8,7 @@ const Private = () => {
         <Outlet />
       </SignedIn>
       <SignedOut>
-        <Navigate to="/auth" />
+        <Navigate to="/" />
       </SignedOut>
     </>
   );
