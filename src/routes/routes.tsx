@@ -4,7 +4,7 @@ import MainLayout from "@/layouts/MainLayout";
 import Dashboard from "@/pages/Dashboard";
 import Landing from "@/pages/Landing";
 import NotFound from "@/pages/NotFound";
-import SelectAccount from "@/pages/SelectAccount";
+import Onboarding from "@/pages/Onboarding";
 import { createBrowserRouter } from "react-router-dom";
 import Private from "./Private";
 import Public from "./Public";
@@ -27,8 +27,8 @@ const routes = createBrowserRouter([
     element: <Private />,
     children: [
       {
-        path: "/select",
-        element: <SelectAccount />,
+        path: "/onboarding",
+        element: <Onboarding />,
       },
     ],
   },

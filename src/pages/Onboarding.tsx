@@ -1,4 +1,4 @@
-import { OrganizationList } from "@clerk/clerk-react";
+import { OrganizationList, UserButton } from "@clerk/clerk-react";
 import { dark } from "@clerk/themes";
 
 export default function SelectAccount() {
@@ -11,6 +11,17 @@ export default function SelectAccount() {
             <div className="h-8 w-8 rounded-lg bg-gradient-to-tr from-blue-500 to-blue-600"></div>
             <span className="text-lg font-medium">StatusHub</span>
           </div>
+          <UserButton
+            showName
+            appearance={{
+              elements: {
+                userButtonBox: "flex flex-row",
+                userButtonOuterIdentifier: "order-1",
+                userButtonTrigger: "flex flex-row items-center",
+              },
+              baseTheme: dark,
+            }}
+          />
         </nav>
       </header>
 
