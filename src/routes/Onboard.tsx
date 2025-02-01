@@ -1,7 +1,7 @@
-import { SignedIn, SignedOut, useOrganization } from "@clerk/clerk-react";
+import { useOrganization, SignedIn, SignedOut } from "@clerk/clerk-react";
 import { Navigate, Outlet } from "react-router-dom";
 
-const Private = () => {
+const Onboard = () => {
   const { isLoaded, organization } = useOrganization();
 
   if (!isLoaded) {
@@ -15,7 +15,7 @@ const Private = () => {
   return (
     <>
       <SignedIn>
-        {organization ? <Outlet /> : <Navigate to="/onboarding" replace />}
+        {organization ? <Navigate to="/dashboard" replace /> : <Outlet />}
       </SignedIn>
       <SignedOut>
         <Navigate to="/" replace />
@@ -24,4 +24,4 @@ const Private = () => {
   );
 };
 
-export default Private;
+export default Onboard;

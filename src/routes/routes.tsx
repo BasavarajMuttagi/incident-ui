@@ -6,6 +6,7 @@ import Landing from "@/pages/Landing";
 import NotFound from "@/pages/NotFound";
 import Onboarding from "@/pages/Onboarding";
 import { createBrowserRouter } from "react-router-dom";
+import Onboard from "./Onboard";
 import Private from "./Private";
 import Public from "./Public";
 
@@ -13,24 +14,13 @@ const routes = createBrowserRouter([
   {
     element: <Public />,
     children: [
-      {
-        index: true,
-        element: <Landing />,
-      },
-      {
-        path: "/login",
-        element: <Login />,
-      },
+      { index: true, element: <Landing /> },
+      { path: "/login", element: <Login /> },
     ],
   },
   {
-    element: <Private />,
-    children: [
-      {
-        path: "/onboarding",
-        element: <Onboarding />,
-      },
-    ],
+    element: <Onboard />,
+    children: [{ path: "/onboarding", element: <Onboarding /> }],
   },
   {
     element: (
@@ -41,21 +31,10 @@ const routes = createBrowserRouter([
         <Private />
       </MainLayout>
     ),
-    children: [
-      {
-        path: "/dashboard",
-        element: <Dashboard />,
-      },
-      {
-        path: "/personal",
-        element: <div>Personal</div>,
-      },
-    ],
+
+    children: [{ path: "/dashboard", element: <Dashboard /> }],
   },
-  {
-    path: "*",
-    element: <NotFound />,
-  },
+  { path: "*", element: <NotFound /> },
 ]);
 
 export default routes;
