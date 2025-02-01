@@ -40,18 +40,16 @@ export default function LandingPage() {
         </div>
 
         <div className="flex items-center space-x-4">
-          <Link
-            to="/login"
-            className="hidden text-sm text-gray-400 transition-colors hover:text-white md:inline-block"
-          >
-            Login
+          <Link to="/login">
+            <Button className="hidden rounded-full bg-white px-6 text-sm text-black hover:bg-gray-200 md:inline-flex">
+              Login
+            </Button>
           </Link>
-          <Button className="hidden rounded-full bg-white px-6 text-sm text-black hover:bg-gray-200 md:inline-flex">
-            Get a demo
-          </Button>
-          <Button className="rounded-full bg-blue-500 px-6 text-sm text-white hover:bg-blue-600">
-            Sign up
-          </Button>
+          <Link to={"/signup"}>
+            <Button className="rounded-full bg-blue-500 px-6 text-sm text-white hover:bg-blue-600">
+              Sign up
+            </Button>
+          </Link>
         </div>
       </nav>
 
@@ -77,9 +75,11 @@ export default function LandingPage() {
                 Powering experiences from next-gen startups to enterprises
               </p>
               <div className="flex flex-col justify-center gap-4 sm:flex-row">
-                <Button className="h-12 rounded-full bg-blue-500 px-8 text-sm text-white hover:bg-blue-600">
-                  Get started
-                </Button>
+                <Link to={"/signup"}>
+                  <Button className="h-12 rounded-full bg-blue-500 px-8 text-sm text-white hover:bg-blue-600">
+                    Get started
+                  </Button>
+                </Link>
                 <Button
                   variant="outline"
                   className="h-12 rounded-full border-white/10 px-8 text-sm text-black hover:bg-white/5 hover:text-white"
