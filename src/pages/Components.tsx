@@ -5,7 +5,7 @@ import { dark } from "@clerk/themes";
 
 const Components = () => {
   return (
-    <div className="h-full w-full p-2">
+    <div className="h-full w-full overscroll-y-auto p-2">
       <div className="flex items-center justify-end">
         <OrganizationSwitcher
           appearance={{

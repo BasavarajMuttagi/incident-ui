@@ -6,14 +6,19 @@ import { ColumnDef } from "@tanstack/react-table";
 import {
   AlertCircle,
   CheckCircle,
+  Edit,
   Loader2,
   Search,
   Shield,
+  Trash,
 } from "lucide-react";
 import { toast } from "sonner";
 import { DataTable } from "./DataTable";
+import { Button } from "./ui/button";
+import { Link } from "react-router-dom";
 
 export type IncidentTableType = {
+  id: string;
   title: string;
   status: "INVESTIGATING" | "IDENTIFIED" | "MONITORING" | "RESOLVED";
   severity: "MINOR" | "MAJOR" | "CRITICAL";
@@ -113,6 +118,46 @@ const columns: ColumnDef<IncidentTableType>[] = [
     cell: ({ row }) => {
       return new Date(row.getValue("createdAt")).toLocaleString();
     },
+  },
+
+  {
+    id: "update-record",
+    header: () => <div />,
+    cell: () => (
+      <Button variant="ghost" className="hover:text-blue-500">
+        update Record
+      </Button>
+    ),
+    enableSorting: false,
+    enableHiding: false,
+  },
+  {
+    id: "edit",
+    header: () => <div />,
+    cell: ({ row }) => {
+      const incident = row.original;
+
+      return (
+        <Button variant="ghost" size="icon" className="hover:text-blue-500">
+          <Link to={`/incidents/incident/edit/${incident.id}`}>
+            <Edit className="h-4 w-4" />
+          </Link>
+        </Button>
+      );
+    },
+    enableSorting: false,
+    enableHiding: false,
+  },
+  {
+    id: "delete",
+    header: () => <div />,
+    cell: () => (
+      <Button variant="ghost" size="icon" className="hover:text-red-500">
+        <Trash className="h-4 w-4" />
+      </Button>
+    ),
+    enableSorting: false,
+    enableHiding: false,
   },
 ];
 
