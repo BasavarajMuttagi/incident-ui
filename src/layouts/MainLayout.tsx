@@ -1,4 +1,4 @@
-import { SocketProvider } from "@/components/socket-provider";
+import { SocketProvider } from "@/providers/socket-provider";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { ReactNode } from "react";
 

@@ -1,4 +1,4 @@
-import SocketContext, { SocketContextType } from "@/components/socket-provider";
+import SocketContext, { SocketContextType } from "@/providers/socket-provider";
 import { useContext } from "react";
 
 const useSocket = (): SocketContextType => {
