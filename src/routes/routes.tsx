@@ -1,6 +1,7 @@
 import Login from "@/components/Login";
 import MainSidebar from "@/components/MainSidebar";
 import MainLayout from "@/layouts/MainLayout";
+import Components from "@/pages/Components";
 import Dashboard from "@/pages/Dashboard";
 import Landing from "@/pages/Landing";
 import NotFound from "@/pages/NotFound";
@@ -9,6 +10,8 @@ import { createBrowserRouter } from "react-router-dom";
 import Onboard from "./Onboard";
 import Private from "./Private";
 import Public from "./Public";
+import { IncidentForm } from "@/pages/IncidentForm";
+import Incidents from "@/pages/Incidents";
 
 const routes = createBrowserRouter([
   {
@@ -32,7 +35,17 @@ const routes = createBrowserRouter([
       </MainLayout>
     ),
 
-    children: [{ path: "/dashboard", element: <Dashboard /> }],
+    children: [
+      { path: "/dashboard", element: <Dashboard /> },
+      { path: "/components", element: <Components /> },
+      {
+        path: "/incidents",
+        children: [
+          { path: "", element: <Incidents /> },
+          { path: "incident/create", element: <IncidentForm /> },
+        ],
+      },
+    ],
   },
   { path: "*", element: <NotFound /> },
 ]);

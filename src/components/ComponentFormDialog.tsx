@@ -10,6 +10,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useQueryClient } from "@tanstack/react-query";
 import { Activity, AlertCircle, CheckCircle, XCircle } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -40,7 +41,7 @@ const statusOptions = [
   },
   {
     value: "DEGRADED",
-    label: "Performance Issues",
+    label: "Degraded",
     icon: Activity,
     className:
       "bg-yellow-500/20 text-yellow-500 data-[state=on]:bg-yellow-500 data-[state=on]:text-white",
@@ -61,7 +62,8 @@ const statusOptions = [
   },
 ];
 
-export function ComponentFormDialog({ refetch }: { refetch: () => void }) {
+export function ComponentFormDialog() {
+  const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { post } = useApiClient();
@@ -79,9 +81,11 @@ export function ComponentFormDialog({ refetch }: { refetch: () => void }) {
       setIsLoading(true);
       await post("/api/v1/component/create", values);
       form.reset();
-      refetch();
       setOpen(false);
       toast("Component Created");
+      queryClient.refetchQueries({
+        queryKey: ["list-components"],
+      });
     } catch (error) {
       console.error(error);
       toast("Error");
@@ -98,7 +102,7 @@ export function ComponentFormDialog({ refetch }: { refetch: () => void }) {
   return (
     <Dialog open={open} onOpenChange={handleOpenChange} modal={true}>
       <DialogTrigger asChild>
-        <Button variant="outline" className="bg-green-500 text-white">
+        <Button variant="outline" size="sm" className="bg-green-500 text-white">
           New Component
         </Button>
       </DialogTrigger>
