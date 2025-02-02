@@ -493,6 +493,5 @@ export {
   TimelineIcon,
   TimelineItem,
   TimelineTime,
-  TimelineTitle
+  TimelineTitle,
 };
-
