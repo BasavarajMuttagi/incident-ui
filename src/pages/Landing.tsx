@@ -82,7 +82,7 @@ export default function LandingPage() {
                 </Link>
                 <Button
                   variant="outline"
-                  className="h-12 rounded-full border-white/10 px-8 text-sm text-black hover:bg-white/5 hover:text-white"
+                  className="h-12 rounded-full border-white/10 px-8 text-sm text-white hover:bg-white/5 hover:text-white"
                 >
                   Get a demo
                 </Button>
