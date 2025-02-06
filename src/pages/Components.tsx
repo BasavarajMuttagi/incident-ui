@@ -9,6 +9,7 @@ const Components = () => {
         variant="outline"
         size="sm"
         className="absolute right-0 top-1 bg-green-500 text-white"
+        asChild
       >
         <Link to="component/create">New Component</Link>
       </Button>

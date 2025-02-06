@@ -100,7 +100,7 @@ const columns: ColumnDef<ComponentType>[] = [
       const component = row.original;
       console.log(component);
       return (
-        <Button variant="ghost" className="hover:text-blue-500">
+        <Button variant="ghost" className="hover:text-blue-500" asChild>
           <Link
             to={`/components/component/edit/${component.id}`}
             className="flex items-center space-x-2"
