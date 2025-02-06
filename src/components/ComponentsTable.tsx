@@ -15,6 +15,7 @@ import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import { DataTable } from "./DataTable";
 import { Button } from "./ui/button";
+import { Skeleton } from "./ui/skeleton";
 
 type ComponentType = {
   orgId: string;
@@ -134,10 +135,9 @@ export function ComponentsTable() {
     return (
       <div>
         <h1 className="mb-10 text-2xl font-extrabold">Components</h1>
-        <div className="flex h-10 w-full items-center justify-center text-center text-white">
-          <span>Loading... </span>
+        <Skeleton className="flex h-32 w-full items-center justify-center rounded-md border bg-zinc-900">
           <Loader2 className="animate-spin text-blue-500" />
-        </div>
+        </Skeleton>
       </div>
     );
   }
