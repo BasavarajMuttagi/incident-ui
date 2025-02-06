@@ -12,9 +12,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryClient } from "@tanstack/react-query";
 import { Activity, AlertCircle, CheckCircle, XCircle } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 import { z } from "zod";
 import { Button } from "../components/ui/button";
@@ -58,10 +58,12 @@ const statusOptions = [
 ];
 
 export function ComponentForm() {
+  const { componentId } = useParams();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [isLoading, setIsLoading] = useState(false);
-  const { post } = useApiClient();
+  const { post, get, patch } = useApiClient();
+  const isEditMode = Boolean(componentId);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -72,12 +74,41 @@ export function ComponentForm() {
     },
   });
 
+  useEffect(() => {
+    const fetchComponent = async () => {
+      if (componentId) {
+        try {
+          setIsLoading(true);
+          const response = await get(`/api/v1/component/${componentId}`);
+          form.reset({
+            name: response.data.name,
+            status: response.data.status,
+            description: response.data.description,
+          });
+        } catch (error) {
+          console.error(error);
+          toast("Error loading component");
+          navigate(-1);
+        } finally {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    fetchComponent();
+  }, [componentId]);
+
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       setIsLoading(true);
-      await post("/api/v1/component/create", values);
+      if (isEditMode) {
+        await patch(`/api/v1/component/${componentId}`, values);
+        toast("Component Updated");
+      } else {
+        await post("/api/v1/component/create", values);
+        toast("Component Created");
+      }
       form.reset();
-      toast("Component Created");
       queryClient.refetchQueries({
         queryKey: ["list-components"],
       });
@@ -97,7 +128,9 @@ export function ComponentForm() {
           onSubmit={form.handleSubmit(onSubmit)}
           className="w-full max-w-3xl space-y-6 rounded-md bg-zinc-900 p-5"
         >
-          <h1 className="text-xl font-semibold text-white">Create Component</h1>
+          <h1 className="text-xl font-semibold text-white">
+            {isEditMode ? "Update Component" : "Create Component"}
+          </h1>
           <FormField
             control={form.control}
             name="name"
@@ -162,13 +195,27 @@ export function ComponentForm() {
             )}
           />
 
-          <div className="flex justify-end">
+          <div className="flex justify-end gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => navigate(-1)}
+              className="bg-zinc-800 text-white hover:bg-zinc-700"
+            >
+              Cancel
+            </Button>
             <Button
               disabled={isLoading}
               type="submit"
               className="bg-green-500 text-white hover:bg-green-400"
             >
-              {isLoading ? "Creating..." : "Create Component"}
+              {isLoading
+                ? isEditMode
+                  ? "Updating..."
+                  : "Creating..."
+                : isEditMode
+                  ? "Update Component"
+                  : "Create Component"}
             </Button>
           </div>
         </form>
