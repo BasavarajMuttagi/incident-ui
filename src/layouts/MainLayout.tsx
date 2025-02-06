@@ -1,6 +1,7 @@
 import { SocketProvider } from "@/providers/socket-provider";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { ReactNode } from "react";
+import WindowLayout from "./WindowLayout";
 
 const MainLayout = ({ children }: { children: ReactNode }) => {
   return (
@@ -19,7 +20,11 @@ MainLayout.Sidebar = ({ children }: { children: ReactNode }) => {
 };
 
 MainLayout.Main = ({ children }: { children: ReactNode }) => {
-  return <main className="flex h-full w-full flex-1 flex-col">{children}</main>;
+  return (
+    <main className="flex h-full w-full flex-1 flex-col">
+      <WindowLayout>{children}</WindowLayout>
+    </main>
+  );
 };
 
 export default MainLayout;

@@ -7,11 +7,14 @@ import {
   Activity,
   AlertCircle,
   CheckCircle,
+  Edit,
   Loader2,
   XCircle,
 } from "lucide-react";
+import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import { DataTable } from "./DataTable";
+import { Button } from "./ui/button";
 
 export type ComponentTableType = {
   name: string;
@@ -94,6 +97,26 @@ const columns: ColumnDef<ComponentTableType>[] = [
       );
     },
   },
+  {
+    id: "edit",
+    header: () => <div />,
+    cell: ({ row }) => {
+      const component = row.original;
+
+      return (
+        <Button variant="ghost" className="hover:text-blue-500">
+          <Link
+            to={`/components/component/edit/${component.name}`}
+            className="flex items-center space-x-2"
+          >
+            <Edit className="h-4 w-4" /> <span>Edit</span>
+          </Link>
+        </Button>
+      );
+    },
+    enableSorting: false,
+    enableHiding: false,
+  },
 ];
 
 export function ComponentsTable() {
@@ -125,7 +148,9 @@ export function ComponentsTable() {
   }
   return (
     <div>
-      <h1 className="mb-10 text-2xl font-extrabold">Components</h1>
+      <div>
+        <h1 className="mb-10 text-2xl font-extrabold">Components</h1>
+      </div>
       <DataTable columns={columns} data={ListData!} />
     </div>
   );

@@ -88,7 +88,7 @@ const MainSidebar = () => {
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter className="my-5">
+      <SidebarFooter className="my-5 h-10">
         <UserButton
           showName
           appearance={{
