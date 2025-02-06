@@ -1,9 +1,9 @@
 import Login from "@/components/Login";
 import MainLayoutWrapper from "@/layouts/MainLayoutWrapper";
-import { ComponentForm } from "@/pages/ComponentForm";
+import ComponentForm from "@/pages/ComponentForm";
 import Components from "@/pages/Components";
 import Dashboard from "@/pages/Dashboard";
-import { IncidentForm } from "@/pages/IncidentForm";
+import IncidentEditForm from "@/pages/IncidentEditForm";
 import Incidents from "@/pages/Incidents";
 import Landing from "@/pages/Landing";
 import NotFound from "@/pages/NotFound";
@@ -12,6 +12,7 @@ import { createBrowserRouter } from "react-router-dom";
 import Onboard from "./Onboard";
 import Private from "./Private";
 import Public from "./Public";
+import { IncidentForm } from "@/pages/IncidentForm";
 
 const routes = createBrowserRouter([
   {
@@ -48,7 +49,10 @@ const routes = createBrowserRouter([
             children: [
               { path: "", element: <Incidents /> },
               { path: "incident/create", element: <IncidentForm /> },
-              { path: "incident/edit/:incidentId", element: <IncidentForm /> },
+              {
+                path: "incident/edit/:incidentId",
+                element: <IncidentEditForm />,
+              },
             ],
           },
         ],

@@ -1,3 +1,4 @@
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { SocketProvider } from "@/providers/socket-provider";
 import { ReactNode } from "react";
@@ -19,7 +20,13 @@ MainLayout.Sidebar = ({ children }: { children: ReactNode }) => {
 };
 
 MainLayout.Main = ({ children }: { children: ReactNode }) => {
-  return <main className="flex h-full w-full flex-1 flex-col">{children}</main>;
+  return (
+    <main className="flex h-full w-full flex-1">
+      <ScrollArea className="h-full w-full">
+        <div className="flex flex-col p-5">{children}</div>
+      </ScrollArea>
+    </main>
+  );
 };
 
 export default MainLayout;

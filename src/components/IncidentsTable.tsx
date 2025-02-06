@@ -105,13 +105,12 @@ const columns: ColumnDef<IncidentTableType>[] = [
       );
     },
   },
-
   {
     accessorKey: "occuredAt",
     header: "Occurred at",
     cell: ({ row }) => {
       const date = new Date(row.getValue("occuredAt"));
-      return format(date, "MMM dd, yyyy HH:mm:ss");
+      return format(date, "MMM dd, yyyy hh:mm:ss a");
     },
   },
   {
@@ -119,7 +118,7 @@ const columns: ColumnDef<IncidentTableType>[] = [
     header: "Created at",
     cell: ({ row }) => {
       const date = new Date(row.getValue("createdAt"));
-      return format(date, "MMM dd, yyyy HH:mm:ss");
+      return format(date, "MMM dd, yyyy hh:mm:ss a");
     },
   },
   {
@@ -140,7 +139,12 @@ const columns: ColumnDef<IncidentTableType>[] = [
       const incident = row.original;
 
       return (
-        <Button variant="ghost" size="icon" className="hover:text-blue-500">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="hover:text-blue-500"
+          asChild
+        >
           <Link to={`/incidents/incident/edit/${incident.id}`}>
             <Edit className="h-4 w-4" />
           </Link>
@@ -182,8 +186,8 @@ export function IncidentsTable() {
   if (isLoading) {
     return (
       <div>
-        <h1 className="mb-10 text-2xl font-extrabold">Components</h1>
-        <Skeleton className="flex h-32 w-full items-center justify-center rounded-md border bg-zinc-900">
+        <h1 className="mb-10 text-2xl font-extrabold">Incidents</h1>
+        <Skeleton className="flex h-[300px] w-full items-center justify-center rounded-md border bg-zinc-900">
           <Loader2 className="animate-spin text-blue-500" />
         </Skeleton>
       </div>

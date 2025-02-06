@@ -135,7 +135,7 @@ export function ComponentsTable() {
     return (
       <div>
         <h1 className="mb-10 text-2xl font-extrabold">Components</h1>
-        <Skeleton className="flex h-32 w-full items-center justify-center rounded-md border bg-zinc-900">
+        <Skeleton className="flex h-[300px] w-full items-center justify-center rounded-md border bg-zinc-900">
           <Loader2 className="animate-spin text-blue-500" />
         </Skeleton>
       </div>

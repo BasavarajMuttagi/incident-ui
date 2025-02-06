@@ -57,7 +57,7 @@ const statusOptions = [
   },
 ];
 
-export function ComponentForm() {
+function ComponentForm() {
   const { componentId } = useParams();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -223,3 +223,4 @@ export function ComponentForm() {
     </div>
   );
 }
+export default ComponentForm;
