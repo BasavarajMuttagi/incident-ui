@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useQuery } from "@tanstack/react-query";
 import { ColumnDef } from "@tanstack/react-table";
+import { format } from "date-fns";
 import {
   AlertCircle,
   CheckCircle,
@@ -12,11 +13,10 @@ import {
   Shield,
   Trash,
 } from "lucide-react";
+import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import { DataTable } from "./DataTable";
 import { Button } from "./ui/button";
-import { Link } from "react-router-dom";
-
 export type IncidentTableType = {
   id: string;
   title: string;
@@ -109,17 +109,18 @@ const columns: ColumnDef<IncidentTableType>[] = [
     accessorKey: "occuredAt",
     header: "Occurred at",
     cell: ({ row }) => {
-      return new Date(row.getValue("occuredAt")).toLocaleString();
+      const date = new Date(row.getValue("occuredAt"));
+      return format(date, "MMM dd, yyyy HH:mm:ss");
     },
   },
   {
     accessorKey: "createdAt",
     header: "Created at",
     cell: ({ row }) => {
-      return new Date(row.getValue("createdAt")).toLocaleString();
+      const date = new Date(row.getValue("createdAt"));
+      return format(date, "MMM dd, yyyy HH:mm:ss");
     },
   },
-
   {
     id: "update-record",
     header: () => <div />,

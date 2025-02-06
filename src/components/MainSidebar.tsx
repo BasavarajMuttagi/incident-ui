@@ -51,11 +51,15 @@ const secondaryMenuItems: MenuItem[] = [
 const MainSidebar = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const isActiveRoute = (path: string) => {
+    // Check if current path starts with the menu item path
+    return location.pathname.startsWith(path);
+  };
   const renderMenuItems = (items: MenuItem[]) => {
     return items.map(({ icon: Icon, label, path }) => (
       <SidebarMenuItem key={label}>
         <SidebarMenuButton
-          className={`w-full ${location.pathname === path ? "bg-zinc-700" : ""}`}
+          className={`w-full ${isActiveRoute(path) ? "bg-zinc-700" : ""}`}
           onClick={() => navigate(path)}
         >
           <Icon className="mr-3" />

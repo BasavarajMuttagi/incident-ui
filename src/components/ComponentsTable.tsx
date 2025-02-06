@@ -16,11 +16,6 @@ import { toast } from "sonner";
 import { DataTable } from "./DataTable";
 import { Button } from "./ui/button";
 
-export type ComponentTableType = {
-  name: string;
-  status: "OPERATIONAL" | "DEGRADED" | "PARTIAL_OUTAGE" | "MAJOR_OUTAGE";
-};
-
 type ComponentType = {
   orgId: string;
   name: string;
@@ -31,7 +26,7 @@ type ComponentType = {
   updatedAt: Date;
 };
 
-const columns: ColumnDef<ComponentTableType>[] = [
+const columns: ColumnDef<ComponentType>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -60,7 +55,7 @@ const columns: ColumnDef<ComponentTableType>[] = [
     accessorKey: "status",
     header: "Status",
     cell: ({ row }) => {
-      const status = row.getValue("status") as ComponentTableType["status"];
+      const status = row.getValue("status") as ComponentType["status"];
 
       const statusConfig = {
         OPERATIONAL: {
@@ -102,11 +97,11 @@ const columns: ColumnDef<ComponentTableType>[] = [
     header: () => <div />,
     cell: ({ row }) => {
       const component = row.original;
-
+      console.log(component);
       return (
         <Button variant="ghost" className="hover:text-blue-500">
           <Link
-            to={`/components/component/edit/${component.name}`}
+            to={`/components/component/edit/${component.id}`}
             className="flex items-center space-x-2"
           >
             <Edit className="h-4 w-4" /> <span>Edit</span>

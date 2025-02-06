@@ -1,6 +1,5 @@
 import Login from "@/components/Login";
-import MainSidebar from "@/components/MainSidebar";
-import MainLayout from "@/layouts/MainLayout";
+import MainLayoutWrapper from "@/layouts/MainLayoutWrapper";
 import { ComponentForm } from "@/pages/ComponentForm";
 import Components from "@/pages/Components";
 import Dashboard from "@/pages/Dashboard";
@@ -9,7 +8,7 @@ import Incidents from "@/pages/Incidents";
 import Landing from "@/pages/Landing";
 import NotFound from "@/pages/NotFound";
 import Onboarding from "@/pages/Onboarding";
-import { createBrowserRouter, Outlet } from "react-router-dom";
+import { createBrowserRouter } from "react-router-dom";
 import Onboard from "./Onboard";
 import Private from "./Private";
 import Public from "./Public";
@@ -28,19 +27,9 @@ const routes = createBrowserRouter([
   },
   {
     element: <Private />,
-
     children: [
       {
-        element: (
-          <MainLayout>
-            <MainLayout.Sidebar>
-              <MainSidebar />
-            </MainLayout.Sidebar>
-            <MainLayout.Main>
-              <Outlet />
-            </MainLayout.Main>
-          </MainLayout>
-        ),
+        element: <MainLayoutWrapper />,
         children: [
           { path: "/dashboard", element: <Dashboard /> },
           {
