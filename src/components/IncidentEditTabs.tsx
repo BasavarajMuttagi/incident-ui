@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 
 export function IncidentEditTabs({ incidentId }: { incidentId: string }) {
   return (
-    <Tabs defaultValue="components" className="w-full">
+    <Tabs defaultValue="updates" className="w-full">
       <TabsList className="grid w-full grid-cols-2">
         <TabsTrigger value="components">Components</TabsTrigger>
         <TabsTrigger value="updates">Updates</TabsTrigger>

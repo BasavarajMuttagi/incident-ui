@@ -1,7 +1,7 @@
 import { useApiClient } from "@/axios/useApiClient";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
 import {
@@ -11,8 +11,8 @@ import {
   Loader2,
   Search,
   Shield,
-  Trash,
 } from "lucide-react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import { DataTable } from "./DataTable";
@@ -130,25 +130,34 @@ const columns: ColumnDef<IncidentUpdateType>[] = [
     enableSorting: false,
     enableHiding: false,
   },
-  {
-    id: "delete",
-    header: () => <div />,
-    cell: () => (
-      <Button
-        variant="ghost"
-        size="icon"
-        className="text-red-500 hover:bg-red-400/10 hover:text-red-600"
-      >
-        <Trash className="h-4 w-4" />
-      </Button>
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
 ];
 
 export function IncidentUpdates({ incidentId }: { incidentId: string }) {
-  const { get } = useApiClient();
+  const { get, post } = useApiClient();
+  const queryClient = useQueryClient();
+  const [selectedRows, setSelectedRows] = useState<IncidentUpdateType[]>([]);
+  const [clearRowSelection, setClearRowSelection] = useState(false);
+  const deleteMutation = useMutation({
+    mutationFn: async (incidents: IncidentUpdateType[]) => {
+      const incidentUpdateIds = incidents.map((e) => e.id);
+      await post(`/incident/${incidentId}/updates/delete`, {
+        incidentUpdateIds,
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["list-incident-updates"] });
+      setClearRowSelection(true);
+      setSelectedRows([]);
+      toast.success("Incident(s) deleted successfully");
+    },
+    onError: () => {
+      toast.error("Failed to delete incidents");
+    },
+  });
+
+  const handleDelete = () => {
+    deleteMutation.mutate(selectedRows);
+  };
   const { data: ListData, isLoading } = useQuery<IncidentUpdateType[]>({
     queryKey: ["list-incident-updates"],
     queryFn: async () => {
@@ -157,7 +166,7 @@ export function IncidentUpdates({ incidentId }: { incidentId: string }) {
         return result.data;
       } catch (error) {
         console.log(error);
-        toast("Error while fetching components");
+        toast("Error while fetching incidents");
       }
     },
   });
@@ -169,5 +178,25 @@ export function IncidentUpdates({ incidentId }: { incidentId: string }) {
       </Skeleton>
     );
   }
-  return <DataTable columns={columns} data={ListData!} />;
+  return (
+    <div className="space-y-1">
+      {selectedRows.length > 0 && (
+        <Button
+          variant="ghost"
+          className="ml-1 text-red-500 hover:bg-red-400/10 hover:text-red-600"
+          onClick={handleDelete}
+        >
+          <div className="inline-flex items-center space-x-1">
+            <span>Detach ({selectedRows.length})</span>
+          </div>
+        </Button>
+      )}
+      <DataTable
+        columns={columns}
+        data={ListData!}
+        onRowSelectionChange={setSelectedRows}
+        clearRowSelection={clearRowSelection}
+      />
+    </div>
+  );
 }

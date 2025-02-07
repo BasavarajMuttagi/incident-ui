@@ -1,16 +1,16 @@
 import { useApiClient } from "@/axios/useApiClient";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ColumnDef } from "@tanstack/react-table";
 import {
   Activity,
   AlertCircle,
   CheckCircle,
   Loader2,
-  X,
   XCircle,
 } from "lucide-react";
+import { useState } from "react";
 import { toast } from "sonner";
 import { ComponentType } from "./ComponentsTable";
 import { DataTable } from "./DataTable";
@@ -94,32 +94,32 @@ const columns: ColumnDef<AttachedComponents>[] = [
       );
     },
   },
-
-  {
-    id: "detach",
-    header: () => <div />,
-    cell: ({ row }) => {
-      const component = row.original;
-      console.log(component);
-      return (
-        <Button
-          variant="ghost"
-          className="text-red-500 hover:bg-red-400/10 hover:text-red-600"
-        >
-          <div className="inline-flex items-center space-x-1">
-            <span>Detach</span> <X className="h-4 w-4" />
-          </div>
-        </Button>
-      );
-    },
-    enableSorting: false,
-    enableHiding: false,
-  },
 ];
 
 export function AttachedComponents({ incidentId }: { incidentId: string }) {
-  const { get } = useApiClient();
+  const { get, post } = useApiClient();
+  const queryClient = useQueryClient();
+  const [selectedRows, setSelectedRows] = useState<AttachedComponents[]>([]);
+  const [clearRowSelection, setClearRowSelection] = useState(false);
+  const detachMutation = useMutation({
+    mutationFn: async (components: AttachedComponents[]) => {
+      const componentIds = components.map((e) => e.componentId);
+      await post(`/incident/${incidentId}/components/detach`, { componentIds });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["list-components"] });
+      setClearRowSelection(false);
+      setSelectedRows([]);
+      toast.success("Component(s) detached successfully");
+    },
+    onError: () => {
+      toast.error("Failed to detach components");
+    },
+  });
 
+  const handleDetach = () => {
+    detachMutation.mutate(selectedRows);
+  };
   const { data: ListData, isLoading } = useQuery<AttachedComponents[]>({
     queryKey: ["list-components"],
     queryFn: async () => {
@@ -140,5 +140,25 @@ export function AttachedComponents({ incidentId }: { incidentId: string }) {
       </Skeleton>
     );
   }
-  return <DataTable columns={columns} data={ListData!} />;
+  return (
+    <div className="space-y-1">
+      {selectedRows.length > 0 && (
+        <Button
+          variant="ghost"
+          className="ml-1 text-red-500 hover:bg-red-400/10 hover:text-red-600"
+          onClick={handleDetach}
+        >
+          <div className="inline-flex items-center space-x-1">
+            <span>Detach ({selectedRows.length})</span>
+          </div>
+        </Button>
+      )}
+      <DataTable
+        columns={columns}
+        data={ListData!}
+        onRowSelectionChange={setSelectedRows}
+        clearRowSelection={clearRowSelection}
+      />
+    </div>
+  );
 }
