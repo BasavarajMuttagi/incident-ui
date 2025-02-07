@@ -1,4 +1,6 @@
 import { useApiClient } from "@/axios/useApiClient";
+import { IncidentEditTabs } from "@/components/IncidentEditTabs";
+import { Card } from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -161,113 +163,113 @@ function IncidentEditForm() {
   }
 
   return (
-    <div className="mt-5 flex w-full justify-center space-y-5">
-      <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="w-full max-w-3xl space-y-6 rounded-md bg-zinc-900 p-5"
-        >
-          <h1 className="text-xl font-semibold text-white">Edit Incident</h1>
-
-          <FormField
-            control={form.control}
-            name="title"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-white">
-                  Title<span className="text-red-500"> *</span>
-                </FormLabel>
-                <FormControl>
-                  <Input {...field} className="border-0 bg-zinc-800" />
-                </FormControl>
-                <FormMessage className="text-red-500" />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="status"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-white">
-                  Severity<span className="text-red-500"> *</span>
-                </FormLabel>
-                <FormControl>
-                  <ToggleGroup
-                    type="single"
-                    value={field.value}
-                    onValueChange={field.onChange}
-                    className="flex flex-wrap justify-start gap-2"
-                  >
-                    {statusOptions.map((option) => (
-                      <ToggleGroupItem
-                        key={option.value}
-                        value={option.value}
-                        className={`gap-2 px-4 py-2 ${option.className}`}
-                      >
-                        <option.icon className="h-4 w-4" />
-                        {option.label}
-                      </ToggleGroupItem>
-                    ))}
-                  </ToggleGroup>
-                </FormControl>
-                <FormMessage className="text-red-500" />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="occuredAt"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-white">
-                  Occurred At<span className="text-red-500"> *</span>
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    type="datetime-local"
-                    {...field}
-                    className="bg-zinc-800"
-                  />
-                </FormControl>
-                <FormMessage className="text-red-500" />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="description"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-white">
-                  Description<span className="text-red-500"> *</span>
-                </FormLabel>
-                <FormControl>
-                  <Textarea
-                    {...field}
-                    className="min-h-[150px] bg-zinc-800"
-                    placeholder="Detailed description of the incident..."
-                  />
-                </FormControl>
-                <FormMessage className="text-red-500" />
-              </FormItem>
-            )}
-          />
-
-          <div className="flex justify-end gap-4">
-            <Button
-              type="submit"
-              disabled={isPending}
-              className="bg-green-500 hover:bg-green-600"
-            >
-              {isPending ? "Updating..." : "Update Incident"}
-            </Button>
-          </div>
-        </form>
-      </Form>
+    <div className="mt-5 flex w-full flex-col items-center justify-center space-y-10">
+      <Card className="w-full max-w-3xl bg-zinc-900">
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="space-y-6 rounded-md p-5"
+          >
+            <h1 className="text-xl font-semibold text-white">Edit Incident</h1>
+            <FormField
+              control={form.control}
+              name="title"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-white">
+                    Title<span className="text-red-500"> *</span>
+                  </FormLabel>
+                  <FormControl>
+                    <Input {...field} className="border-0 bg-zinc-800" />
+                  </FormControl>
+                  <FormMessage className="text-red-500" />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="status"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-white">
+                    Severity<span className="text-red-500"> *</span>
+                  </FormLabel>
+                  <FormControl>
+                    <ToggleGroup
+                      type="single"
+                      value={field.value}
+                      onValueChange={field.onChange}
+                      className="flex flex-wrap justify-start gap-2"
+                    >
+                      {statusOptions.map((option) => (
+                        <ToggleGroupItem
+                          key={option.value}
+                          value={option.value}
+                          className={`gap-2 px-4 py-2 ${option.className}`}
+                        >
+                          <option.icon className="h-4 w-4" />
+                          {option.label}
+                        </ToggleGroupItem>
+                      ))}
+                    </ToggleGroup>
+                  </FormControl>
+                  <FormMessage className="text-red-500" />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="occuredAt"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-white">
+                    Occurred At<span className="text-red-500"> *</span>
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      type="datetime-local"
+                      {...field}
+                      className="bg-zinc-800"
+                    />
+                  </FormControl>
+                  <FormMessage className="text-red-500" />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-white">
+                    Description<span className="text-red-500"> *</span>
+                  </FormLabel>
+                  <FormControl>
+                    <Textarea
+                      {...field}
+                      className="min-h-[150px] bg-zinc-800"
+                      placeholder="Detailed description of the incident..."
+                    />
+                  </FormControl>
+                  <FormMessage className="text-red-500" />
+                </FormItem>
+              )}
+            />
+            <div className="flex justify-end gap-4">
+              <Button
+                type="submit"
+                disabled={isPending}
+                className="bg-green-600 text-white hover:bg-green-700"
+              >
+                {isPending ? "Updating..." : "Update Incident"}
+              </Button>
+            </div>
+          </form>
+        </Form>
+      </Card>
+      <div className="w-full max-w-3xl space-y-6">
+        {incidentId && <IncidentEditTabs incidentId={incidentId} />}
+      </div>
     </div>
   );
 }

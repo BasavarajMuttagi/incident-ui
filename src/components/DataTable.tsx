@@ -55,7 +55,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <div>
-      <div className="rounded-md border bg-zinc-900 text-white">
+      <div className="rounded-md bg-zinc-900 text-white">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -100,7 +100,7 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
-      <div className="flex items-center justify-between py-4">
+      <div className="flex items-center justify-between p-3">
         <div className="flex items-center space-x-2">
           <p className="text-sm font-medium">Rows per page</p>
           <Select
@@ -109,7 +109,7 @@ export function DataTable<TData, TValue>({
               table.setPageSize(Number(value));
             }}
           >
-            <SelectTrigger className="h-8 w-[70px] bg-zinc-950">
+            <SelectTrigger className="h-8 w-[70px]">
               <SelectValue placeholder={table.getState().pagination.pageSize} />
             </SelectTrigger>
             <SelectContent side="top">
@@ -122,9 +122,9 @@ export function DataTable<TData, TValue>({
           </Select>
         </div>
 
-        <div className="flex-1 text-center text-sm text-muted-foreground">
-          Page {table.getState().pagination.pageIndex + 1} of
-          {table.getPageCount()}
+        <div className="flex-1 space-x-2 text-center text-sm text-muted-foreground">
+          <span>Page {table.getState().pagination.pageIndex + 1} of</span>
+          <span>{table.getPageCount()}</span>
         </div>
 
         <div className="flex items-center space-x-2">

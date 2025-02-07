@@ -7,9 +7,7 @@ const MainLayout = ({ children }: { children: ReactNode }) => {
   return (
     <SocketProvider>
       <SidebarProvider>
-        <div className="flex h-screen w-full overflow-hidden bg-zinc-800">
-          {children}
-        </div>
+        <div className="flex h-screen w-full overflow-hidden">{children}</div>
       </SidebarProvider>
     </SocketProvider>
   );

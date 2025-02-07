@@ -1,4 +1,5 @@
 import { useApiClient } from "@/axios/useApiClient";
+import { Card } from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -181,219 +182,223 @@ export function IncidentForm() {
   });
   return (
     <div className="mt-5 flex w-full justify-center space-y-5">
-      <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="w-full max-w-3xl space-y-6 rounded-md bg-zinc-900 p-5"
-        >
-          <h1 className="text-xl font-semibold text-white">Create Incident</h1>
+      <Card className="w-full max-w-3xl bg-zinc-900">
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="w-full space-y-6 rounded-md p-5"
+          >
+            <h1 className="text-xl font-semibold text-white">
+              Create Incident
+            </h1>
 
-          <FormField
-            control={form.control}
-            name="title"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-white">
-                  Title<span className="text-red-500"> *</span>
-                </FormLabel>
-                <FormControl>
-                  <Input {...field} className="border-0 bg-zinc-800" />
-                </FormControl>
-                <FormMessage className="text-red-500" />
-              </FormItem>
-            )}
-          />
+            <FormField
+              control={form.control}
+              name="title"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-white">
+                    Title<span className="text-red-500"> *</span>
+                  </FormLabel>
+                  <FormControl>
+                    <Input {...field} className="border-0 bg-zinc-800" />
+                  </FormControl>
+                  <FormMessage className="text-red-500" />
+                </FormItem>
+              )}
+            />
 
-          <FormField
-            control={form.control}
-            name="status"
-            render={({ field }) => (
-              <FormItem>
+            <FormField
+              control={form.control}
+              name="status"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-white">
+                    Severity<span className="text-red-500"> *</span>
+                  </FormLabel>
+                  <FormControl>
+                    <ToggleGroup
+                      type="single"
+                      value={field.value}
+                      onValueChange={field.onChange}
+                      className="flex flex-wrap justify-start gap-2"
+                    >
+                      {statusOptions.map((option) => (
+                        <ToggleGroupItem
+                          key={option.value}
+                          value={option.value}
+                          className={`gap-2 px-4 py-2 ${option.className}`}
+                        >
+                          <option.icon className="h-4 w-4" />
+                          {option.label}
+                        </ToggleGroupItem>
+                      ))}
+                    </ToggleGroup>
+                  </FormControl>
+                  <FormMessage className="text-red-500" />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="occuredAt"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-white">
+                    Occurred At<span className="text-red-500"> *</span>
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      type="datetime-local"
+                      {...field}
+                      className="bg-zinc-800"
+                    />
+                  </FormControl>
+                  <FormMessage className="text-red-500" />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-white">
+                    Description<span className="text-red-500"> *</span>
+                  </FormLabel>
+                  <FormControl>
+                    <Textarea
+                      {...field}
+                      className="min-h-[150px] bg-zinc-800"
+                      placeholder="Detailed description of the incident..."
+                    />
+                  </FormControl>
+                  <FormMessage className="text-red-500" />
+                </FormItem>
+              )}
+            />
+
+            <div className="space-y-4">
+              <div className="space-y-5">
                 <FormLabel className="text-white">
-                  Severity<span className="text-red-500"> *</span>
+                  Affected Components <span className="text-red-500"> *</span>
                 </FormLabel>
-                <FormControl>
-                  <ToggleGroup
-                    type="single"
-                    value={field.value}
-                    onValueChange={field.onChange}
-                    className="flex flex-wrap justify-start gap-2"
+                <div>
+                  <Button
+                    type="button"
+                    onClick={() => {
+                      const currentComponents =
+                        form.getValues("components") || [];
+                      form.setValue("components", [
+                        ...currentComponents,
+                        { componentId: "", status: "OPERATIONAL" },
+                      ]);
+                    }}
+                    className="bg-green-500 hover:bg-green-600"
                   >
-                    {statusOptions.map((option) => (
-                      <ToggleGroupItem
-                        key={option.value}
-                        value={option.value}
-                        className={`gap-2 px-4 py-2 ${option.className}`}
-                      >
-                        <option.icon className="h-4 w-4" />
-                        {option.label}
-                      </ToggleGroupItem>
-                    ))}
-                  </ToggleGroup>
-                </FormControl>
-                <FormMessage className="text-red-500" />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="occuredAt"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-white">
-                  Occurred At<span className="text-red-500"> *</span>
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    type="datetime-local"
-                    {...field}
-                    className="bg-zinc-800"
-                  />
-                </FormControl>
-                <FormMessage className="text-red-500" />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="description"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-white">
-                  Description<span className="text-red-500"> *</span>
-                </FormLabel>
-                <FormControl>
-                  <Textarea
-                    {...field}
-                    className="min-h-[150px] bg-zinc-800"
-                    placeholder="Detailed description of the incident..."
-                  />
-                </FormControl>
-                <FormMessage className="text-red-500" />
-              </FormItem>
-            )}
-          />
-
-          <div className="space-y-4">
-            <div className="space-y-5">
-              <FormLabel className="text-white">
-                Affected Components <span className="text-red-500"> *</span>
-              </FormLabel>
-              <div>
-                <Button
-                  type="button"
-                  onClick={() => {
-                    const currentComponents =
-                      form.getValues("components") || [];
-                    form.setValue("components", [
-                      ...currentComponents,
-                      { componentId: "", status: "OPERATIONAL" },
-                    ]);
-                  }}
-                  className="bg-green-500 hover:bg-green-600"
-                >
-                  Add Component
-                </Button>
+                    Add Component
+                  </Button>
+                </div>
               </div>
+
+              {form.watch("components")?.map((_, index) => (
+                <div key={index} className="flex flex-col space-y-3 rounded-md">
+                  <FormField
+                    control={form.control}
+                    name={`components.${index}.componentId`}
+                    render={({ field }) => (
+                      <FormItem className="flex-1">
+                        <FormLabel className="text-white">
+                          Select Component Affected
+                          <span className="text-red-500"> *</span>
+                        </FormLabel>
+                        <FormControl>
+                          <Select
+                            value={field.value}
+                            onValueChange={field.onChange}
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select component" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {ListData?.map((component) => (
+                                <SelectItem
+                                  key={component.id}
+                                  value={component.id}
+                                >
+                                  {component.name}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </FormControl>
+                        <FormMessage className="text-red-500" />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name={`components.${index}.status`}
+                    render={({ field }) => (
+                      <FormItem className="flex-1">
+                        <FormLabel className="text-white">
+                          Status<span className="text-red-500"> *</span>
+                        </FormLabel>
+                        <FormControl>
+                          <ToggleGroup
+                            type="single"
+                            value={field.value}
+                            onValueChange={field.onChange}
+                            className="flex flex-wrap justify-start gap-2"
+                          >
+                            {componentStatusOptions.map((option) => (
+                              <ToggleGroupItem
+                                key={option.value}
+                                value={option.value}
+                                className={`flex items-center gap-2 rounded-md px-4 py-2 ${option.className}`}
+                              >
+                                <option.icon className="h-4 w-4" />
+                                {option.label}
+                              </ToggleGroupItem>
+                            ))}
+                          </ToggleGroup>
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+
+                  <Button
+                    type="button"
+                    variant="destructive"
+                    onClick={() => {
+                      const components = form.getValues("components");
+                      form.setValue(
+                        "components",
+                        components.filter((_, i) => i !== index),
+                      );
+                    }}
+                  >
+                    Delete
+                  </Button>
+                </div>
+              ))}
             </div>
 
-            {form.watch("components")?.map((_, index) => (
-              <div key={index} className="flex flex-col space-y-3 rounded-md">
-                <FormField
-                  control={form.control}
-                  name={`components.${index}.componentId`}
-                  render={({ field }) => (
-                    <FormItem className="flex-1">
-                      <FormLabel className="text-white">
-                        Select Component Affected
-                        <span className="text-red-500"> *</span>
-                      </FormLabel>
-                      <FormControl>
-                        <Select
-                          value={field.value}
-                          onValueChange={field.onChange}
-                        >
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select component" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {ListData?.map((component) => (
-                              <SelectItem
-                                key={component.id}
-                                value={component.id}
-                              >
-                                {component.name}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </FormControl>
-                      <FormMessage className="text-red-500" />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name={`components.${index}.status`}
-                  render={({ field }) => (
-                    <FormItem className="flex-1">
-                      <FormLabel className="text-white">
-                        Status<span className="text-red-500"> *</span>
-                      </FormLabel>
-                      <FormControl>
-                        <ToggleGroup
-                          type="single"
-                          value={field.value}
-                          onValueChange={field.onChange}
-                          className="flex flex-wrap justify-start gap-2"
-                        >
-                          {componentStatusOptions.map((option) => (
-                            <ToggleGroupItem
-                              key={option.value}
-                              value={option.value}
-                              className={`flex items-center gap-2 rounded-md px-4 py-2 ${option.className}`}
-                            >
-                              <option.icon className="h-4 w-4" />
-                              {option.label}
-                            </ToggleGroupItem>
-                          ))}
-                        </ToggleGroup>
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-
-                <Button
-                  type="button"
-                  variant="destructive"
-                  onClick={() => {
-                    const components = form.getValues("components");
-                    form.setValue(
-                      "components",
-                      components.filter((_, i) => i !== index),
-                    );
-                  }}
-                >
-                  Delete
-                </Button>
-              </div>
-            ))}
-          </div>
-
-          <div className="flex justify-end gap-4">
-            <Button
-              type="submit"
-              disabled={isPending}
-              className="bg-green-500 hover:bg-green-600"
-            >
-              {isPending ? "Submitting..." : "Submit Incident"}
-            </Button>
-          </div>
-        </form>
-      </Form>
+            <div className="flex justify-end gap-4">
+              <Button
+                type="submit"
+                disabled={isPending}
+                className="bg-green-500 hover:bg-green-600"
+              >
+                {isPending ? "Submitting..." : "Submit Incident"}
+              </Button>
+            </div>
+          </form>
+        </Form>
+      </Card>
     </div>
   );
 }

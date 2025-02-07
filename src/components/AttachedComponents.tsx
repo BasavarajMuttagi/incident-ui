@@ -9,25 +9,25 @@ import {
   CheckCircle,
   Edit,
   Loader2,
+  Trash,
   XCircle,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
+import { ComponentType } from "./ComponentsTable";
 import { DataTable } from "./DataTable";
 import { Button } from "./ui/button";
 import { Skeleton } from "./ui/skeleton";
 
-export type ComponentType = {
-  orgId: string;
-  name: string;
+type AttachedComponents = {
   id: string;
-  description: string | null;
   status: "OPERATIONAL" | "DEGRADED" | "PARTIAL_OUTAGE" | "MAJOR_OUTAGE";
-  createdAt: Date;
-  updatedAt: Date;
+  incidentId: string;
+  componentId: string;
+  component: ComponentType;
 };
 
-const columns: ColumnDef<ComponentType>[] = [
+const columns: ColumnDef<AttachedComponents>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -50,6 +50,9 @@ const columns: ColumnDef<ComponentType>[] = [
   {
     accessorKey: "name",
     header: "Name",
+    cell: ({ row }) => {
+      return row.original.component.name;
+    },
   },
   // In your columns definition
   {
@@ -98,14 +101,17 @@ const columns: ColumnDef<ComponentType>[] = [
     header: () => <div />,
     cell: ({ row }) => {
       const component = row.original;
-
+      console.log(component);
       return (
         <Button
           variant="ghost"
           className="text-blue-500 hover:bg-blue-400/10 hover:text-blue-600"
           asChild
         >
-          <Link to={`/components/component/edit/${component.id}`}>
+          <Link
+            to={`/components/component/edit/${component.id}`}
+            className="flex items-center space-x-2"
+          >
             <Edit className="h-4 w-4" /> <span>Edit</span>
           </Link>
         </Button>
@@ -114,16 +120,31 @@ const columns: ColumnDef<ComponentType>[] = [
     enableSorting: false,
     enableHiding: false,
   },
+  {
+    id: "delete",
+    header: () => <div />,
+    cell: () => (
+      <Button
+        variant="ghost"
+        size="icon"
+        className="text-red-500 hover:bg-red-400/10 hover:text-red-600"
+      >
+        <Trash className="h-4 w-4" />
+      </Button>
+    ),
+    enableSorting: false,
+    enableHiding: false,
+  },
 ];
 
-export function ComponentsTable() {
+export function AttachedComponents({ incidentId }: { incidentId: string }) {
   const { get } = useApiClient();
 
-  const { data: ListData, isLoading } = useQuery<ComponentType[]>({
-    queryKey: ["list-attached-components"],
+  const { data: ListData, isLoading } = useQuery<AttachedComponents[]>({
+    queryKey: ["list-components"],
     queryFn: async () => {
       try {
-        const result = await get(`/api/v1/component/list`);
+        const result = await get(`/api/v1/incident/${incidentId}/components`);
         return result.data;
       } catch (error) {
         console.log(error);
@@ -134,20 +155,10 @@ export function ComponentsTable() {
 
   if (isLoading) {
     return (
-      <div>
-        <h1 className="mb-10 text-2xl font-extrabold">Components</h1>
-        <Skeleton className="flex h-[300px] w-full items-center justify-center rounded-md border bg-zinc-900">
-          <Loader2 className="animate-spin text-blue-500" />
-        </Skeleton>
-      </div>
+      <Skeleton className="flex h-[300px] w-full items-center justify-center rounded-md bg-zinc-900">
+        <Loader2 className="animate-spin text-blue-500" />
+      </Skeleton>
     );
   }
-  return (
-    <div>
-      <div>
-        <h1 className="mb-10 text-2xl font-extrabold">Components</h1>
-      </div>
-      <DataTable columns={columns} data={ListData!} />
-    </div>
-  );
+  return <DataTable columns={columns} data={ListData!} />;
 }
