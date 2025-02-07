@@ -80,7 +80,7 @@ function ComponentForm() {
       if (componentId) {
         try {
           setIsLoading(true);
-          const response = await get(`/api/v1/component/${componentId}`);
+          const response = await get(`/component/${componentId}`);
           form.reset({
             name: response.data.name,
             status: response.data.status,
@@ -103,10 +103,10 @@ function ComponentForm() {
     try {
       setIsLoading(true);
       if (isEditMode) {
-        await patch(`/api/v1/component/${componentId}`, values);
+        await patch(`/component/${componentId}`, values);
         toast("Component Updated");
       } else {
-        await post("/api/v1/component/create", values);
+        await post("/component/create", values);
         toast("Component Created");
       }
       form.reset();

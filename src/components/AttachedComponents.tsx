@@ -7,12 +7,10 @@ import {
   Activity,
   AlertCircle,
   CheckCircle,
-  Edit,
   Loader2,
-  Trash,
+  X,
   XCircle,
 } from "lucide-react";
-import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import { ComponentType } from "./ComponentsTable";
 import { DataTable } from "./DataTable";
@@ -96,8 +94,9 @@ const columns: ColumnDef<AttachedComponents>[] = [
       );
     },
   },
+
   {
-    id: "edit",
+    id: "detach",
     header: () => <div />,
     cell: ({ row }) => {
       const component = row.original;
@@ -105,33 +104,14 @@ const columns: ColumnDef<AttachedComponents>[] = [
       return (
         <Button
           variant="ghost"
-          className="text-blue-500 hover:bg-blue-400/10 hover:text-blue-600"
-          asChild
+          className="text-red-500 hover:bg-red-400/10 hover:text-red-600"
         >
-          <Link
-            to={`/components/component/edit/${component.id}`}
-            className="flex items-center space-x-2"
-          >
-            <Edit className="h-4 w-4" /> <span>Edit</span>
-          </Link>
+          <div className="inline-flex items-center space-x-1">
+            <span>Detach</span> <X className="h-4 w-4" />
+          </div>
         </Button>
       );
     },
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
-    id: "delete",
-    header: () => <div />,
-    cell: () => (
-      <Button
-        variant="ghost"
-        size="icon"
-        className="text-red-500 hover:bg-red-400/10 hover:text-red-600"
-      >
-        <Trash className="h-4 w-4" />
-      </Button>
-    ),
     enableSorting: false,
     enableHiding: false,
   },
@@ -144,7 +124,7 @@ export function AttachedComponents({ incidentId }: { incidentId: string }) {
     queryKey: ["list-components"],
     queryFn: async () => {
       try {
-        const result = await get(`/api/v1/incident/${incidentId}/components`);
+        const result = await get(`/incident/${incidentId}/components/list`);
         return result.data;
       } catch (error) {
         console.log(error);

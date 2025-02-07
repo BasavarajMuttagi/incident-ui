@@ -66,14 +66,14 @@ type IncidentStatus =
   | "RESOLVED";
 type incidentType = {
   orgId: string;
-  userId: string;
   id: string;
+  title: string;
   description: string;
   status: IncidentStatus;
-  createdAt: Date;
-  title: string;
   occuredAt: Date;
   resolvedAt: Date | null;
+  createdAt: Date;
+  updatedAt: Date;
 };
 
 const formSchema = z.object({
@@ -104,7 +104,7 @@ function IncidentEditForm() {
   });
   const { mutate, isPending } = useMutation({
     mutationFn: (values: z.infer<typeof formSchema>) =>
-      patch(`/api/v1/incident/${incidentId}`, values),
+      patch(`/incident/${incidentId}`, values),
     onSuccess: () => {
       form.reset();
       toast("Incident Created");
@@ -123,7 +123,7 @@ function IncidentEditForm() {
       if (incidentId) {
         try {
           setIsLoading(true);
-          const response = await get(`/api/v1/incident/${incidentId}`);
+          const response = await get(`/incident/${incidentId}`);
           const { title, description, occuredAt, status } =
             response.data as incidentType;
           form.reset({
@@ -192,7 +192,7 @@ function IncidentEditForm() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-white">
-                    Severity<span className="text-red-500"> *</span>
+                    Status<span className="text-red-500"> *</span>
                   </FormLabel>
                   <FormControl>
                     <ToggleGroup

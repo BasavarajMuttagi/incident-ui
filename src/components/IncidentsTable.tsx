@@ -22,7 +22,6 @@ export type IncidentTableType = {
   id: string;
   title: string;
   status: "INVESTIGATING" | "IDENTIFIED" | "MONITORING" | "RESOLVED";
-  severity: "MINOR" | "MAJOR" | "CRITICAL";
   occuredAt: Date;
   createdAt: Date;
 };
@@ -35,7 +34,6 @@ type IncidentType = {
   status: "INVESTIGATING" | "IDENTIFIED" | "MONITORING" | "RESOLVED";
   createdAt: Date;
   title: string;
-  severity: "MINOR" | "MAJOR" | "CRITICAL";
   occuredAt: Date;
   resolvedAt: Date | null;
 };
@@ -169,7 +167,7 @@ export function IncidentsTable() {
     queryKey: ["list-incidents"],
     queryFn: async () => {
       try {
-        const result = await get(`/api/v1/incident/list`);
+        const result = await get(`/incident/list`);
         return result.data;
       } catch (error) {
         console.log(error);

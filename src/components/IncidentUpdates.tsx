@@ -96,7 +96,10 @@ const columns: ColumnDef<IncidentUpdateType>[] = [
       );
     },
   },
-
+  {
+    accessorKey: "user",
+    header: "User",
+  },
   {
     accessorKey: "createdAt",
     header: "Created at",
@@ -146,12 +149,11 @@ const columns: ColumnDef<IncidentUpdateType>[] = [
 
 export function IncidentUpdates({ incidentId }: { incidentId: string }) {
   const { get } = useApiClient();
-
   const { data: ListData, isLoading } = useQuery<IncidentUpdateType[]>({
     queryKey: ["list-incident-updates"],
     queryFn: async () => {
       try {
-        const result = await get(`/api/v1/incident/${incidentId}/updates`);
+        const result = await get(`/incident/${incidentId}/updates/list`);
         return result.data;
       } catch (error) {
         console.log(error);

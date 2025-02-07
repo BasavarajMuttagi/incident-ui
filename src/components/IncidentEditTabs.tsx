@@ -1,5 +1,6 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AttachedComponents } from "./AttachedComponents";
+import { IncidentTimelineForm } from "./IncidentTimelineForm";
 import { IncidentUpdates } from "./IncidentUpdates";
 import { Button } from "./ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
@@ -35,12 +36,7 @@ export function IncidentEditTabs({ incidentId }: { incidentId: string }) {
           <CardHeader className="border-b">
             <CardTitle className="flex items-center justify-between text-xl">
               <span>Updates</span>
-              <Button
-                variant="outline"
-                className="bg-green-600 text-white hover:bg-green-700"
-              >
-                New Update
-              </Button>
+              <IncidentTimelineForm incidentId={incidentId} />
             </CardTitle>
           </CardHeader>
 

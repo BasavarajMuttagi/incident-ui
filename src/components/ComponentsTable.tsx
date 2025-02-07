@@ -123,7 +123,7 @@ export function ComponentsTable() {
     queryKey: ["list-attached-components"],
     queryFn: async () => {
       try {
-        const result = await get(`/api/v1/component/list`);
+        const result = await get(`/component/list`);
         return result.data;
       } catch (error) {
         console.log(error);

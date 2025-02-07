@@ -146,7 +146,7 @@ export function IncidentForm() {
 
   const { mutate, isPending } = useMutation({
     mutationFn: (values: z.infer<typeof formSchema>) =>
-      post("/api/v1/incident/create", values),
+      post("/incident/create", values),
     onSuccess: () => {
       form.reset();
       toast("Incident Created");
@@ -172,7 +172,7 @@ export function IncidentForm() {
     queryKey: ["list-components"],
     queryFn: async () => {
       try {
-        const result = await get(`/api/v1/component/list`);
+        const result = await get(`/component/list`);
         return result.data;
       } catch (error) {
         console.log(error);
@@ -214,7 +214,7 @@ export function IncidentForm() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-white">
-                    Severity<span className="text-red-500"> *</span>
+                    Status<span className="text-red-500"> *</span>
                   </FormLabel>
                   <FormControl>
                     <ToggleGroup
