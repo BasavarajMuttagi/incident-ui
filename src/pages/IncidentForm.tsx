@@ -318,20 +318,29 @@ export function IncidentForm() {
                   disabled={
                     form.watch("components")?.length === ListData?.length
                   }
-                  className="bg-green-500 hover:bg-green-600 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="bg-blue-600 text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   Add Component
                 </Button>
               </div>
             </div>
 
-            <div className="flex justify-end gap-4">
+            <div className="flex justify-end gap-2">
               <Button
-                type="submit"
+                type="button"
+                variant="outline"
+                onClick={() => navigate(-1)}
+                className="bg-zinc-800 text-white hover:bg-zinc-700"
                 disabled={isPending}
-                className="bg-green-500 hover:bg-green-600"
               >
-                {isPending ? "Submitting..." : "Submit Incident"}
+                Cancel
+              </Button>
+              <Button
+                disabled={isPending}
+                type="submit"
+                className="bg-green-600 text-white hover:bg-green-700"
+              >
+                {isPending ? "Creating..." : "Create Incident"}
               </Button>
             </div>
           </form>

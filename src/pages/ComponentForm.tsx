@@ -168,7 +168,7 @@ function ComponentForm() {
               <Button
                 disabled={isPending || isFetching}
                 type="submit"
-                className="bg-green-500 text-white hover:bg-green-400"
+                className="bg-green-600 text-white hover:bg-green-700"
               >
                 {isPending
                   ? isEditMode

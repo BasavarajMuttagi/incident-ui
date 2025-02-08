@@ -220,7 +220,7 @@ export function AttachComponentDialog({ incidentId }: { incidentId: string }) {
                   disabled={
                     form.watch("components")?.length === ListData?.length
                   }
-                  className="bg-green-500 hover:bg-green-600 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="bg-blue-600 text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   Add Component
                 </Button>
@@ -230,7 +230,7 @@ export function AttachComponentDialog({ incidentId }: { incidentId: string }) {
                 <Button
                   type="submit"
                   disabled={attachMutation.isPending}
-                  className="bg-green-500 text-white hover:bg-green-600"
+                  className="bg-green-600 text-white hover:bg-green-700"
                 >
                   {attachMutation.isPending ? "Attaching..." : "Attach"}
                 </Button>

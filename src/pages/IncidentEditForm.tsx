@@ -215,10 +215,20 @@ function IncidentEditForm() {
                 </FormItem>
               )}
             />
-            <div className="flex justify-end gap-4">
+
+            <div className="flex justify-end gap-2">
               <Button
-                type="submit"
+                type="button"
+                variant="outline"
+                onClick={() => navigate(-1)}
+                className="bg-zinc-800 text-white hover:bg-zinc-700"
                 disabled={isPending}
+              >
+                Cancel
+              </Button>
+              <Button
+                disabled={isPending}
+                type="submit"
                 className="bg-green-600 text-white hover:bg-green-700"
               >
                 {isPending ? "Updating..." : "Update Incident"}

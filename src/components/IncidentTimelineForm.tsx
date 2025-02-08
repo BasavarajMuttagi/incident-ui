@@ -204,7 +204,7 @@ export function IncidentTimelineForm({
               <Button
                 type="submit"
                 disabled={isPending}
-                className="bg-green-500 text-white hover:bg-green-600"
+                className="bg-green-600 text-white hover:bg-green-700"
               >
                 {isPending
                   ? isEditMode

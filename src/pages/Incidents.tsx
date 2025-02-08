@@ -8,7 +8,7 @@ const Incidents = () => {
       <Button
         variant="outline"
         size="sm"
-        className="absolute right-0 top-1 bg-green-500 text-white"
+        className="absolute right-0 top-1 bg-green-600 text-white hover:bg-green-700"
         asChild
       >
         <Link to="incident/create">New Incident</Link>
