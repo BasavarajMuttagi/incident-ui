@@ -64,7 +64,8 @@ const formSchema = z.object({
         ]),
       }),
     )
-    .min(1, "At least one component is required"),
+    .optional()
+    .default([]),
 });
 
 const statusOptions = [
@@ -161,10 +162,6 @@ export function IncidentForm() {
   });
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    if (values.components.length === 0) {
-      toast.error("Please add at least one component");
-      return;
-    }
     mutate(values);
   };
 
@@ -283,7 +280,7 @@ export function IncidentForm() {
             <div className="space-y-4">
               <div className="space-y-5">
                 <FormLabel className="text-white">
-                  Affected Components <span className="text-red-500"> *</span>
+                  Affected Components
                 </FormLabel>
                 <div>
                   <Button

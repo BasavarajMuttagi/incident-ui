@@ -102,7 +102,7 @@ const columns: ColumnDef<ComponentType>[] = [
       return (
         <Button
           variant="ghost"
-          className="text-blue-500 hover:bg-blue-400/10 hover:text-blue-600"
+          className="text-green-500 hover:bg-green-400/10 hover:text-green-600"
           asChild
         >
           <Link to={`/components/component/edit/${component.id}`}>

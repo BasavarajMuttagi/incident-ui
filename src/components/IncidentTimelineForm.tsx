@@ -153,7 +153,7 @@ export function IncidentTimelineForm({
         {isEditMode ? (
           <Button
             variant="ghost"
-            className="text-blue-500 hover:bg-blue-400/10 hover:text-blue-600"
+            className="text-green-500 hover:bg-green-400/10 hover:text-green-600"
           >
             <div className="flex items-center space-x-1">
               <Edit className="h-4 w-4" /> <span>Edit</span>
@@ -161,17 +161,17 @@ export function IncidentTimelineForm({
           </Button>
         ) : (
           <Button
-            variant="outline"
-            className="bg-green-600 text-white hover:bg-green-700"
+            variant="ghost"
+            className="text-blue-500 hover:bg-blue-400/10 hover:text-blue-600"
           >
-            New Update
+            Record update
           </Button>
         )}
       </DialogTrigger>
       <DialogContent className="max-w-3xl bg-zinc-900">
         <DialogHeader>
           <DialogTitle className="text-lg font-semibold">
-            Create Timeline Update
+            {isEditMode ? "Edit Timeline Update" : "Create Timeline Update"}
           </DialogTitle>
         </DialogHeader>
         <Form {...form}>
@@ -236,7 +236,13 @@ export function IncidentTimelineForm({
                 disabled={isPending}
                 className="bg-green-500 text-white hover:bg-green-600"
               >
-                {isPending ? "Updating..." : "Update"}
+                {isPending
+                  ? isEditMode
+                    ? "Saving..."
+                    : "Creating..."
+                  : isEditMode
+                    ? "Save Changes"
+                    : "Create Update"}
               </Button>
             </div>
           </form>

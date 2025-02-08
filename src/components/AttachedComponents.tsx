@@ -46,11 +46,8 @@ const columns: ColumnDef<AttachedComponents>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "name",
+    accessorKey: "component.name",
     header: "Name",
-    cell: ({ row }) => {
-      return row.original.component.name;
-    },
   },
   // In your columns definition
   {
@@ -108,7 +105,7 @@ export function AttachedComponents({ incidentId }: { incidentId: string }) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["list-components"] });
-      setClearRowSelection(false);
+      setClearRowSelection(true);
       setSelectedRows([]);
       toast.success("Component(s) detached successfully");
     },

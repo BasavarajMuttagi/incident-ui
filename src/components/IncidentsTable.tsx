@@ -16,6 +16,7 @@ import {
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import { DataTable } from "./DataTable";
+import { IncidentTimelineForm } from "./IncidentTimelineForm";
 import { Button } from "./ui/button";
 import { Skeleton } from "./ui/skeleton";
 export type IncidentTableType = {
@@ -120,13 +121,12 @@ const columns: ColumnDef<IncidentTableType>[] = [
     },
   },
   {
-    id: "update-record",
+    id: "record-update",
     header: () => <div />,
-    cell: () => (
-      <Button variant="ghost" className="hover:text-blue-500">
-        update Record
-      </Button>
-    ),
+    cell: ({ row }) => {
+      const incident = row.original;
+      return <IncidentTimelineForm incidentId={incident.id} />;
+    },
     enableSorting: false,
     enableHiding: false,
   },
@@ -137,7 +137,11 @@ const columns: ColumnDef<IncidentTableType>[] = [
       const incident = row.original;
 
       return (
-        <Button variant="ghost" className="hover:text-blue-500" asChild>
+        <Button
+          variant="ghost"
+          className="text-green-500 hover:bg-green-400/10 hover:text-green-600"
+          asChild
+        >
           <Link to={`/incidents/incident/edit/${incident.id}`}>
             <Edit className="h-4 w-4" /> <span>Edit</span>
           </Link>
@@ -151,7 +155,11 @@ const columns: ColumnDef<IncidentTableType>[] = [
     id: "delete",
     header: () => <div />,
     cell: () => (
-      <Button variant="ghost" size="icon" className="hover:text-red-500">
+      <Button
+        variant="ghost"
+        size="icon"
+        className="text-red-500 hover:bg-red-400/10 hover:text-red-600"
+      >
         <Trash className="h-4 w-4" />
       </Button>
     ),

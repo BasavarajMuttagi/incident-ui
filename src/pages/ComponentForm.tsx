@@ -121,7 +121,7 @@ function ComponentForm() {
             className="w-full space-y-6 rounded-md p-5"
           >
             <h1 className="text-xl font-semibold text-white">
-              {isEditMode ? "Update Component" : "Create Component"}
+              {isEditMode ? "Edit Component" : "Create Component"}
             </h1>
             <FormField
               control={form.control}
@@ -206,8 +206,8 @@ function ComponentForm() {
                     ? "Updating..."
                     : "Creating..."
                   : isEditMode
-                    ? "Update Component"
-                    : "Create Component"}
+                    ? "Update"
+                    : "Create"}
               </Button>
             </div>
           </form>
