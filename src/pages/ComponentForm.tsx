@@ -11,9 +11,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Activity, AlertCircle, CheckCircle, XCircle } from "lucide-react";
-import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
@@ -62,7 +61,6 @@ function ComponentForm() {
   const { componentId } = useParams();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const [isLoading, setIsLoading] = useState(false);
   const { post, get, patch } = useApiClient();
   const isEditMode = Boolean(componentId);
 
@@ -75,51 +73,43 @@ function ComponentForm() {
     },
   });
 
-  useEffect(() => {
-    const fetchComponent = async () => {
-      if (componentId) {
-        try {
-          setIsLoading(true);
-          const response = await get(`/component/${componentId}`);
-          form.reset({
-            name: response.data.name,
-            status: response.data.status,
-            description: response.data.description,
-          });
-        } catch (error) {
-          console.error(error);
-          toast("Error loading component");
-          navigate(-1);
-        } finally {
-          setIsLoading(false);
-        }
+  const { isLoading: isFetching } = useQuery({
+    queryKey: ["component", componentId],
+    queryFn: async () => {
+      if (!componentId) return null;
+      try {
+        const response = await get(`/component/${componentId}`);
+        form.reset(response.data);
+        return response.data;
+      } catch (error) {
+        toast.error("Error loading component");
+        navigate(-1);
+        throw error;
       }
-    };
+    },
+    enabled: Boolean(componentId),
+  });
 
-    fetchComponent();
-  }, [componentId]);
-
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    try {
-      setIsLoading(true);
+  const { mutate, isPending } = useMutation({
+    mutationFn: async (values: z.infer<typeof formSchema>) => {
       if (isEditMode) {
-        await patch(`/component/${componentId}`, values);
-        toast("Component Updated");
-      } else {
-        await post("/component/create", values);
-        toast("Component Created");
+        return patch(`/component/${componentId}`, values);
       }
+      return post("/component/create", values);
+    },
+    onSuccess: () => {
+      toast.success(isEditMode ? "Component Updated" : "Component Created");
       form.reset();
-      queryClient.refetchQueries({
-        queryKey: ["list-components"],
-      });
+      queryClient.invalidateQueries({ queryKey: ["list-components"] });
       navigate(-1);
-    } catch (error) {
-      console.error(error);
-      toast("Error");
-    } finally {
-      setIsLoading(false);
-    }
+    },
+    onError: () => {
+      toast.error("Error");
+    },
+  });
+
+  const onSubmit = (values: z.infer<typeof formSchema>) => {
+    mutate(values);
   };
 
   return (
@@ -207,11 +197,11 @@ function ComponentForm() {
                 Cancel
               </Button>
               <Button
-                disabled={isLoading}
+                disabled={isPending || isFetching}
                 type="submit"
                 className="bg-green-500 text-white hover:bg-green-400"
               >
-                {isLoading
+                {isPending
                   ? isEditMode
                     ? "Updating..."
                     : "Creating..."

@@ -12,7 +12,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { formatISO } from "date-fns";
 import {
   AlertCircle,
@@ -21,7 +21,6 @@ import {
   Search,
   Shield,
 } from "lucide-react";
-import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
@@ -89,7 +88,6 @@ const formSchema = z.object({
 
 function IncidentEditForm() {
   const { incidentId } = useParams();
-  const [isLoading, setIsLoading] = useState(false);
   const { get, patch } = useApiClient();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -107,43 +105,40 @@ function IncidentEditForm() {
       patch(`/incident/${incidentId}`, values),
     onSuccess: () => {
       form.reset();
-      toast("Incident Created");
+      toast.success("Incident Created");
       queryClient.refetchQueries({
         queryKey: ["list-incidents"],
       });
       navigate(-1);
     },
     onError: () => {
-      toast("Error while creating incident");
+      toast.error("Error while creating incident");
     },
   });
 
-  useEffect(() => {
-    const fetchIncident = async () => {
-      if (incidentId) {
-        try {
-          setIsLoading(true);
-          const response = await get(`/incident/${incidentId}`);
-          const { title, description, occuredAt, status } =
-            response.data as incidentType;
-          form.reset({
-            title,
-            description,
-            occuredAt: formatISO(occuredAt).slice(0, 16),
-            status,
-          });
-        } catch (error) {
-          console.error(error);
-          toast("Error loading component");
-          navigate(-1);
-        } finally {
-          setIsLoading(false);
-        }
+  const { isLoading } = useQuery({
+    queryKey: ["incident", incidentId],
+    queryFn: async () => {
+      if (!incidentId) return null;
+      try {
+        const response = await get(`/incident/${incidentId}`);
+        const { title, description, occuredAt, status } =
+          response.data as incidentType;
+        form.reset({
+          title,
+          description,
+          occuredAt: formatISO(occuredAt).slice(0, 16),
+          status,
+        });
+        return response.data;
+      } catch (error) {
+        toast.error("Error loading component");
+        navigate(-1);
+        throw error;
       }
-    };
-
-    fetchIncident();
-  }, [incidentId]);
+    },
+    enabled: Boolean(incidentId),
+  });
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     mutate(values);

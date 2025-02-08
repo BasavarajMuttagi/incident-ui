@@ -149,14 +149,14 @@ export function IncidentForm() {
       post("/incident/create", values),
     onSuccess: () => {
       form.reset();
-      toast("Incident Created");
+      toast.success("Incident Created");
       queryClient.refetchQueries({
         queryKey: ["list-incidents"],
       });
       navigate(-1);
     },
     onError: () => {
-      toast("Error while creating incident");
+      toast.error("Error while creating incident");
     },
   });
 
@@ -176,7 +176,7 @@ export function IncidentForm() {
         return result.data;
       } catch (error) {
         console.log(error);
-        toast("Error while fetching components");
+        toast.error("Error while fetching components");
       }
     },
   });

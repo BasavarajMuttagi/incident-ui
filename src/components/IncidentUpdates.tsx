@@ -7,15 +7,14 @@ import { format } from "date-fns";
 import {
   AlertCircle,
   CheckCircle,
-  Edit,
   Loader2,
   Search,
   Shield,
 } from "lucide-react";
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import { DataTable } from "./DataTable";
+import { IncidentTimelineForm } from "./IncidentTimelineForm";
 import { Button } from "./ui/button";
 import { Skeleton } from "./ui/skeleton";
 type IncidentStatus =
@@ -114,17 +113,11 @@ const columns: ColumnDef<IncidentUpdateType>[] = [
     header: () => <div />,
     cell: ({ row }) => {
       const incident = row.original;
-
       return (
-        <Button
-          variant="ghost"
-          className="text-blue-500 hover:bg-blue-400/10 hover:text-blue-600"
-          asChild
-        >
-          <Link to={`/incidents/incident/edit/${incident.id}`}>
-            <Edit className="h-4 w-4" /> <span>Edit</span>
-          </Link>
-        </Button>
+        <IncidentTimelineForm
+          incidentId={incident.incidentId}
+          incidentUpdateId={incident.id}
+        />
       );
     },
     enableSorting: false,
@@ -166,7 +159,7 @@ export function IncidentUpdates({ incidentId }: { incidentId: string }) {
         return result.data;
       } catch (error) {
         console.log(error);
-        toast("Error while fetching incidents");
+        toast.error("Error while fetching incidents");
       }
     },
   });

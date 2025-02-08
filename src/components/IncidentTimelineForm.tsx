@@ -9,8 +9,8 @@ import {
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { AlertCircle, CheckCircle, Search, Shield } from "lucide-react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { AlertCircle, CheckCircle, Edit, Search, Shield } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -63,10 +63,17 @@ const statusOptions = [
   },
 ];
 
-export function IncidentTimelineForm({ incidentId }: { incidentId: string }) {
+export function IncidentTimelineForm({
+  incidentId,
+  incidentUpdateId,
+}: {
+  incidentId: string;
+  incidentUpdateId?: string;
+}) {
   const [open, setOpen] = useState(false);
   const queryClient = useQueryClient();
-  const { post } = useApiClient();
+  const { post, get, patch } = useApiClient();
+  const isEditMode = Boolean(incidentUpdateId);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -75,20 +82,59 @@ export function IncidentTimelineForm({ incidentId }: { incidentId: string }) {
     },
   });
 
-  const { mutate, isPending } = useMutation({
-    mutationFn: (values: z.infer<typeof formSchema>) =>
-      post(`/incident/${incidentId}/updates/create`, values),
+  useQuery({
+    queryKey: ["get-incident-update", incidentId, incidentUpdateId],
+    queryFn: async () => {
+      if (!incidentUpdateId) return null;
+      try {
+        const response = await get(
+          `/incident/${incidentId}/updates/${incidentUpdateId}`,
+        );
+        form.reset({
+          status: response.data.status,
+          message: response.data.message,
+        });
+      } catch (error) {
+        toast.error("Failed to load incident update");
+        throw error;
+      }
+    },
+    enabled: Boolean(incidentUpdateId),
+  });
 
+  const { mutate, isPending } = useMutation({
+    mutationFn: async (values: z.infer<typeof formSchema>) => {
+      try {
+        if (isEditMode) {
+          await patch(
+            `/incident/${incidentId}/updates/${incidentUpdateId}`,
+            values,
+          );
+          toast.success("Incident Update Modified");
+        } else {
+          await post(`/incident/${incidentId}/updates/create`, values);
+          toast.success("Incident Update Created");
+        }
+      } catch (error) {
+        console.error(error);
+        toast.error("Error while creating or updating incident");
+        throw error;
+      }
+    },
     onSuccess: () => {
       form.reset();
-      toast("Incident Update Created");
       queryClient.refetchQueries({
         queryKey: ["list-incident-updates"],
       });
+      if (isEditMode) {
+        queryClient.refetchQueries({
+          queryKey: ["get-incident-update", incidentId, incidentUpdateId],
+        });
+      }
       setOpen(false);
     },
     onError: () => {
-      toast("Error while creating incident");
+      toast.error("Error while creating or updating incident");
     },
   });
 
@@ -104,12 +150,23 @@ export function IncidentTimelineForm({ incidentId }: { incidentId: string }) {
   return (
     <Dialog open={open} onOpenChange={handleOpenChange} modal={true}>
       <DialogTrigger asChild>
-        <Button
-          variant="outline"
-          className="bg-green-600 text-white hover:bg-green-700"
-        >
-          New Update
-        </Button>
+        {isEditMode ? (
+          <Button
+            variant="ghost"
+            className="text-blue-500 hover:bg-blue-400/10 hover:text-blue-600"
+          >
+            <div className="flex items-center space-x-1">
+              <Edit className="h-4 w-4" /> <span>Edit</span>
+            </div>
+          </Button>
+        ) : (
+          <Button
+            variant="outline"
+            className="bg-green-600 text-white hover:bg-green-700"
+          >
+            New Update
+          </Button>
+        )}
       </DialogTrigger>
       <DialogContent className="max-w-3xl bg-zinc-900">
         <DialogHeader>

@@ -171,7 +171,7 @@ export function IncidentsTable() {
         return result.data;
       } catch (error) {
         console.log(error);
-        toast("Error while fetching incidents");
+        toast.error("Error while fetching incidents");
       }
     },
   });

@@ -127,7 +127,7 @@ export function ComponentsTable() {
         return result.data;
       } catch (error) {
         console.log(error);
-        toast("Error while fetching components");
+        toast.error("Error while fetching components");
       }
     },
   });
