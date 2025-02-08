@@ -10,9 +10,9 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { componentStatusOptions } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Activity, AlertCircle, CheckCircle, XCircle } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
@@ -25,37 +25,6 @@ const formSchema = z.object({
   status: z.enum(["OPERATIONAL", "DEGRADED", "PARTIAL_OUTAGE", "MAJOR_OUTAGE"]),
   description: z.string(),
 });
-
-const statusOptions = [
-  {
-    value: "OPERATIONAL",
-    label: "Operational",
-    icon: CheckCircle,
-    className:
-      "bg-emerald-500/20 text-emerald-500 data-[state=on]:bg-emerald-500 data-[state=on]:text-white",
-  },
-  {
-    value: "DEGRADED",
-    label: "Degraded",
-    icon: Activity,
-    className:
-      "bg-yellow-500/20 text-yellow-500 data-[state=on]:bg-yellow-500 data-[state=on]:text-white",
-  },
-  {
-    value: "PARTIAL_OUTAGE",
-    label: "Partial Outage",
-    icon: AlertCircle,
-    className:
-      "bg-orange-500/20 text-orange-500 data-[state=on]:bg-orange-500 data-[state=on]:text-white",
-  },
-  {
-    value: "MAJOR_OUTAGE",
-    label: "Major Outage",
-    icon: XCircle,
-    className:
-      "bg-red-500/20 text-red-500 data-[state=on]:bg-red-500 data-[state=on]:text-white",
-  },
-];
 
 function ComponentForm() {
   const { componentId } = useParams();
@@ -154,7 +123,7 @@ function ComponentForm() {
                       onValueChange={field.onChange}
                       className="flex flex-wrap justify-start gap-2"
                     >
-                      {statusOptions.map((option) => (
+                      {componentStatusOptions.map((option) => (
                         <ToggleGroupItem
                           key={option.value}
                           value={option.value}

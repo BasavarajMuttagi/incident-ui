@@ -1,15 +1,10 @@
 import { useApiClient } from "@/axios/useApiClient";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
+import { componentStatusConfig } from "@/lib/utils";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ColumnDef } from "@tanstack/react-table";
-import {
-  Activity,
-  AlertCircle,
-  CheckCircle,
-  Loader2,
-  XCircle,
-} from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { ComponentType } from "./ComponentsTable";
@@ -56,37 +51,14 @@ const columns: ColumnDef<AttachedComponents>[] = [
     cell: ({ row }) => {
       const status = row.getValue("status") as ComponentType["status"];
 
-      const statusConfig = {
-        OPERATIONAL: {
-          color: "bg-emerald-500/20 text-emerald-500",
-          icon: CheckCircle,
-          label: "operational",
-        },
-        DEGRADED: {
-          color: "bg-yellow-500/20 text-yellow-500",
-          icon: Activity,
-          label: "degraded",
-        },
-        PARTIAL_OUTAGE: {
-          color: "bg-orange-500/20 text-orange-500",
-          icon: AlertCircle,
-          label: "partial outage",
-        },
-        MAJOR_OUTAGE: {
-          color: "bg-red-500/20 text-red-500",
-          icon: XCircle,
-          label: "major outage",
-        },
-      };
-
-      const StatusIcon = statusConfig[status].icon;
+      const StatusIcon = componentStatusConfig[status].icon;
 
       return (
         <Badge
-          className={`rounded-md ${statusConfig[status].color} hover:${statusConfig[status].color} flex w-fit items-center gap-2`}
+          className={`rounded-md ${componentStatusConfig[status].color} hover:${componentStatusConfig[status].color} flex w-fit items-center gap-2`}
         >
           <StatusIcon className="h-4 w-4" />
-          {statusConfig[status].label}
+          {componentStatusConfig[status].label}
         </Badge>
       );
     },

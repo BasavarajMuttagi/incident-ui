@@ -16,7 +16,6 @@ import {
 } from "@/components/ui/select";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Activity, AlertCircle, CheckCircle, XCircle } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -31,6 +30,7 @@ import {
 } from "./ui/dialog";
 import { ScrollArea } from "./ui/scroll-area";
 import { ToggleGroup, ToggleGroupItem } from "./ui/toggle-group";
+import { componentStatusOptions } from "@/lib/utils";
 
 type ComponentType = {
   id: string;
@@ -52,37 +52,6 @@ const formSchema = z.object({
     )
     .min(1, "At least one component is required"),
 });
-
-const componentStatusOptions = [
-  {
-    value: "OPERATIONAL",
-    label: "Operational",
-    icon: CheckCircle,
-    className:
-      "bg-emerald-500/20 text-emerald-500 data-[state=on]:bg-emerald-500 data-[state=on]:text-white",
-  },
-  {
-    value: "DEGRADED",
-    label: "Degraded",
-    icon: Activity,
-    className:
-      "bg-yellow-500/20 text-yellow-500 data-[state=on]:bg-yellow-500 data-[state=on]:text-white",
-  },
-  {
-    value: "PARTIAL_OUTAGE",
-    label: "Partial Outage",
-    icon: AlertCircle,
-    className:
-      "bg-orange-500/20 text-orange-500 data-[state=on]:bg-orange-500 data-[state=on]:text-white",
-  },
-  {
-    value: "MAJOR_OUTAGE",
-    label: "Major Outage",
-    icon: XCircle,
-    className:
-      "bg-red-500/20 text-red-500 data-[state=on]:bg-red-500 data-[state=on]:text-white",
-  },
-];
 
 export function AttachComponentDialog({ incidentId }: { incidentId: string }) {
   const [open, setOpen] = useState(false);

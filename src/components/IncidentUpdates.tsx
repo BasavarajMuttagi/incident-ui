@@ -1,16 +1,11 @@
 import { useApiClient } from "@/axios/useApiClient";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
+import { incidentStatusConfig } from "@/lib/utils";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
-import {
-  AlertCircle,
-  CheckCircle,
-  Loader2,
-  Search,
-  Shield,
-} from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { DataTable } from "./DataTable";
@@ -60,37 +55,14 @@ const columns: ColumnDef<IncidentUpdateType>[] = [
     cell: ({ row }) => {
       const status = row.getValue("status") as IncidentUpdateType["status"];
 
-      const statusConfig = {
-        INVESTIGATING: {
-          color: "bg-blue-500/15 text-blue-400",
-          icon: Search,
-          label: "investigating",
-        },
-        IDENTIFIED: {
-          color: "bg-violet-500/15 text-violet-400",
-          icon: AlertCircle,
-          label: "identified",
-        },
-        MONITORING: {
-          color: "bg-yellow-500/15 text-yellow-400",
-          icon: Shield,
-          label: "monitoring",
-        },
-        RESOLVED: {
-          color: "bg-green-500/15 text-green-400",
-          icon: CheckCircle,
-          label: "resolved",
-        },
-      };
-
-      const StatusIcon = statusConfig[status].icon;
+      const StatusIcon = incidentStatusConfig[status].icon;
 
       return (
         <Badge
-          className={`rounded-md ${statusConfig[status].color} hover:${statusConfig[status].color} flex w-fit items-center gap-2`}
+          className={`rounded-md ${incidentStatusConfig[status].color} hover:${incidentStatusConfig[status].color} flex w-fit items-center gap-2`}
         >
           <StatusIcon className="h-4 w-4" />
-          {statusConfig[status].label}
+          {incidentStatusConfig[status].label}
         </Badge>
       );
     },

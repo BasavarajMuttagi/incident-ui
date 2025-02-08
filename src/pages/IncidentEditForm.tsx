@@ -11,16 +11,11 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { incidentStatusOptions } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { formatISO } from "date-fns";
-import {
-  AlertCircle,
-  CheckCircle,
-  Loader2,
-  Search,
-  Shield,
-} from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
@@ -28,36 +23,6 @@ import { z } from "zod";
 import { Button } from "../components/ui/button";
 import { ToggleGroup, ToggleGroupItem } from "../components/ui/toggle-group";
 
-const statusOptions = [
-  {
-    value: "INVESTIGATING",
-    label: "Investigating",
-    icon: Search,
-    className:
-      "bg-blue-500/20 text-blue-500 data-[state=on]:bg-blue-500 data-[state=on]:text-white",
-  },
-  {
-    value: "IDENTIFIED",
-    label: "Identified",
-    icon: AlertCircle,
-    className:
-      "bg-violet-500/20 text-violet-500 data-[state=on]:bg-violet-500 data-[state=on]:text-white",
-  },
-  {
-    value: "MONITORING",
-    label: "Monitoring",
-    icon: Shield,
-    className:
-      "bg-yellow-500/20 text-yellow-500 data-[state=on]:bg-yellow-500 data-[state=on]:text-white",
-  },
-  {
-    value: "RESOLVED",
-    label: "Resolved",
-    icon: CheckCircle,
-    className:
-      "bg-green-500/20 text-green-500 data-[state=on]:bg-green-500 data-[state=on]:text-white",
-  },
-];
 type IncidentStatus =
   | "INVESTIGATING"
   | "IDENTIFIED"
@@ -196,7 +161,7 @@ function IncidentEditForm() {
                       onValueChange={field.onChange}
                       className="flex flex-wrap justify-start gap-2"
                     >
-                      {statusOptions.map((option) => (
+                      {incidentStatusOptions.map((option) => (
                         <ToggleGroupItem
                           key={option.value}
                           value={option.value}
