@@ -4,22 +4,26 @@ import ComponentForm from "@/pages/ComponentForm";
 import Components from "@/pages/Components";
 import Dashboard from "@/pages/Dashboard";
 import IncidentEditForm from "@/pages/IncidentEditForm";
+import { IncidentForm } from "@/pages/IncidentForm";
 import Incidents from "@/pages/Incidents";
 import Landing from "@/pages/Landing";
 import NotFound from "@/pages/NotFound";
 import Onboarding from "@/pages/Onboarding";
+import Subscribers from "@/pages/Subscribers";
+import { Verify } from "@/pages/Verify";
 import { createBrowserRouter } from "react-router-dom";
 import Onboard from "./Onboard";
 import Private from "./Private";
 import Public from "./Public";
-import { IncidentForm } from "@/pages/IncidentForm";
 
 const routes = createBrowserRouter([
+  { path: "/verify", element: <Verify /> },
   {
     element: <Public />,
     children: [
       { index: true, element: <Landing /> },
       { path: "/login", element: <Login /> },
+      { path: "/verify", element: <Verify /> },
     ],
   },
   {
@@ -54,6 +58,10 @@ const routes = createBrowserRouter([
                 element: <IncidentEditForm />,
               },
             ],
+          },
+          {
+            path: "/subscribers",
+            element: <Subscribers />,
           },
         ],
       },
