@@ -180,7 +180,14 @@ export function IncidentUpdates({ incidentId }: { incidentId: string }) {
           onClick={handleDelete}
         >
           <div className="inline-flex items-center space-x-1">
-            <span>Detach ({selectedRows.length})</span>
+            {deleteMutation.isPending ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin" />
+                <span>Deleting</span>
+              </>
+            ) : (
+              <span>Delete ({selectedRows.length})</span>
+            )}
           </div>
         </Button>
       )}

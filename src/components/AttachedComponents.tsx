@@ -145,9 +145,14 @@ export function AttachedComponents({ incidentId }: { incidentId: string }) {
           className="ml-1 text-red-500 hover:bg-red-400/10 hover:text-red-600"
           onClick={handleDetach}
         >
-          <div className="inline-flex items-center space-x-1">
+          {detachMutation.isPending ? (
+            <>
+              <Loader2 className="h-4 w-4 animate-spin" />
+              <span>Detaching</span>
+            </>
+          ) : (
             <span>Detach ({selectedRows.length})</span>
-          </div>
+          )}
         </Button>
       )}
       <DataTable
