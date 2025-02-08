@@ -10,6 +10,7 @@ import Landing from "@/pages/Landing";
 import NotFound from "@/pages/NotFound";
 import Onboarding from "@/pages/Onboarding";
 import Subscribers from "@/pages/Subscribers";
+import { Unsubscribe } from "@/pages/Unsubscribe";
 import { Verify } from "@/pages/Verify";
 import { createBrowserRouter } from "react-router-dom";
 import Onboard from "./Onboard";
@@ -18,6 +19,7 @@ import Public from "./Public";
 
 const routes = createBrowserRouter([
   { path: "/verify", element: <Verify /> },
+  { path: "/unsubscribe", element: <Unsubscribe /> },
   {
     element: <Public />,
     children: [
