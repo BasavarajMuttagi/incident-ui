@@ -1,8 +1,8 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { AttachComponentDialog } from "./AttachComponentDialog";
 import { AttachedComponents } from "./AttachedComponents";
 import { IncidentTimelineForm } from "./IncidentTimelineForm";
 import { IncidentUpdates } from "./IncidentUpdates";
-import { Button } from "./ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 
 export function IncidentEditTabs({ incidentId }: { incidentId: string }) {
@@ -17,12 +17,7 @@ export function IncidentEditTabs({ incidentId }: { incidentId: string }) {
           <CardHeader className="border-b">
             <CardTitle className="flex items-center justify-between text-xl">
               <span>Components</span>
-              <Button
-                variant="outline"
-                className="bg-zinc-900 text-white hover:bg-zinc-800"
-              >
-                Attach
-              </Button>
+              <AttachComponentDialog incidentId={incidentId} />
             </CardTitle>
           </CardHeader>
 

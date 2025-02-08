@@ -278,30 +278,10 @@ export function IncidentForm() {
             />
 
             <div className="space-y-4">
-              <div className="space-y-5">
-                <FormLabel className="text-white">
-                  Affected Components
-                </FormLabel>
-                <div>
-                  <Button
-                    type="button"
-                    onClick={() => {
-                      const currentComponents =
-                        form.getValues("components") || [];
-                      form.setValue("components", [
-                        ...currentComponents,
-                        { componentId: "", status: "OPERATIONAL" },
-                      ]);
-                    }}
-                    className="bg-green-500 hover:bg-green-600"
-                  >
-                    Add Component
-                  </Button>
-                </div>
-              </div>
+              <FormLabel className="text-white">Affected Components</FormLabel>
 
               {form.watch("components")?.map((_, index) => (
-                <div key={index} className="flex flex-col space-y-3 rounded-md">
+                <div key={index} className="space-y-4 rounded-md border p-4">
                   <FormField
                     control={form.control}
                     name={`components.${index}.componentId`}
@@ -320,7 +300,16 @@ export function IncidentForm() {
                               <SelectValue placeholder="Select component" />
                             </SelectTrigger>
                             <SelectContent>
-                              {ListData?.map((component) => (
+                              {ListData?.filter(
+                                (component) =>
+                                  !form
+                                    .getValues("components")
+                                    .some(
+                                      (selected, selectedIndex) =>
+                                        selected.componentId === component.id &&
+                                        selectedIndex !== index,
+                                    ),
+                              ).map((component) => (
                                 <SelectItem
                                   key={component.id}
                                   value={component.id}
@@ -378,10 +367,30 @@ export function IncidentForm() {
                       );
                     }}
                   >
-                    Delete
+                    Remove
                   </Button>
                 </div>
               ))}
+
+              <div>
+                <Button
+                  type="button"
+                  onClick={() => {
+                    const currentComponents =
+                      form.getValues("components") || [];
+                    form.setValue("components", [
+                      ...currentComponents,
+                      { componentId: "", status: "OPERATIONAL" },
+                    ]);
+                  }}
+                  disabled={
+                    form.watch("components")?.length === ListData?.length
+                  }
+                  className="bg-green-500 hover:bg-green-600 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  Add Component
+                </Button>
+              </div>
             </div>
 
             <div className="flex justify-end gap-4">
