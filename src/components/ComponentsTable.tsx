@@ -1,8 +1,9 @@
 import { useApiClient } from "@/axios/useApiClient";
 import { Checkbox } from "@/components/ui/checkbox";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { ColumnDef } from "@tanstack/react-table";
-import { Edit, Loader2 } from "lucide-react";
+import { Edit, Loader2, Trash } from "lucide-react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import { ComponentStatusBadge } from "./ComponentStatusBadge";
@@ -55,7 +56,7 @@ const columns: ColumnDef<ComponentType>[] = [
   },
   {
     id: "edit",
-    header: () => <div />,
+    header: "Edit",
     cell: ({ row }) => {
       const component = row.original;
 
@@ -74,13 +75,18 @@ const columns: ColumnDef<ComponentType>[] = [
     enableSorting: false,
     enableHiding: false,
   },
+  {
+    id: "delete",
+    header: "Delete",
+    cell: ({ row }) => <DeleteButton id={row.original.id} />,
+  },
 ];
 
 export function ComponentsTable() {
   const { get } = useApiClient();
 
   const { data: ListData, isLoading } = useQuery<ComponentType[]>({
-    queryKey: ["list-attached-components"],
+    queryKey: ["list-components"],
     queryFn: async () => {
       try {
         const result = await get(`/component/list`);
@@ -111,3 +117,39 @@ export function ComponentsTable() {
     </div>
   );
 }
+
+const DeleteButton = ({ id }: { id: string }) => {
+  const [isLoading, setLoading] = useState(false);
+  const queryClient = useQueryClient();
+  const { delete: deleteComponent } = useApiClient();
+  const handleDelete = async () => {
+    try {
+      setLoading(true);
+      await deleteComponent(`/component/${id}`);
+      queryClient.refetchQueries({
+        queryKey: ["list-components"],
+      });
+      toast.success("Component Deleted");
+    } catch (error) {
+      console.log(error);
+      toast.error("error");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <Button
+      variant="ghost"
+      size="icon"
+      className="text-red-500 hover:bg-red-400/10 hover:text-red-600"
+      onClick={() => handleDelete()}
+    >
+      {isLoading ? (
+        <Loader2 className="h-4 w-4 animate-spin" />
+      ) : (
+        <Trash className="h-4 w-4" />
+      )}
+    </Button>
+  );
+};

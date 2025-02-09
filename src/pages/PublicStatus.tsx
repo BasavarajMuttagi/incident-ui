@@ -90,17 +90,19 @@ const PublicStatus = () => {
             {orgId && <NewSubscriberDialogPublic orgId={orgId} />}
           </div>
           <div className="space-y-10">
-            <Alert
-              className={cn(
-                hasNonOperationalComponent ? "bg-yellow-600" : "bg-green-600",
-              )}
-            >
-              <AlertTitle className="text-lg font-normal">
-                {hasNonOperationalComponent
-                  ? "Some systems are experiencing issues"
-                  : "All Systems Operational"}
-              </AlertTitle>
-            </Alert>
+            {components.length > 0 && (
+              <Alert
+                className={cn(
+                  hasNonOperationalComponent ? "bg-yellow-600" : "bg-green-600",
+                )}
+              >
+                <AlertTitle className="text-lg font-normal">
+                  {hasNonOperationalComponent
+                    ? "Some systems are experiencing issues"
+                    : "All Systems Operational"}
+                </AlertTitle>
+              </Alert>
+            )}
             <div className="space-y-2">
               <h1 className="text-lg font-semibold">Components</h1>
               <div className="rounded-lg border">
