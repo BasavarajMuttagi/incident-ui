@@ -1,6 +1,9 @@
 import { ComponentType } from "@/components/ComponentsTable";
 import { ComponentStatusBadge } from "@/components/ComponentStatusBadge";
-import { IncidentType } from "@/components/IncidentsTable";
+import {
+  IncidentTimelineType,
+  IncidentType,
+} from "@/components/IncidentsTable";
 import { IncidentStatusBadge } from "@/components/IncidentStatusBadge";
 import { NewSubscriberDialogPublic } from "@/components/NewSubscriberDialogPublic";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -34,7 +37,6 @@ const PublicStatus = () => {
       setComponents(data);
     });
     socket.emit("get-incidents", orgId, (incidents: IncidentType[]) => {
-      console.log(incidents);
       setIncidents(incidents);
     });
     socket.on("new-component", (data: ComponentType) => {
@@ -50,11 +52,32 @@ const PublicStatus = () => {
         ...prevComponents.map((e) => (e.id === data.id ? data : e)),
       ]);
     });
+    socket.on("new-incident", (data: IncidentType) => {
+      setIncidents((prev) => [data, ...prev]);
+    });
+
+    socket.on("incident-deleted", (id: string) => {
+      setIncidents((prev) => prev.filter((p) => p.id === id));
+    });
+
+    socket.on("incident-updated", (data: IncidentType) => {
+      setIncidents((prevIncidents) => [
+        ...prevIncidents.map((e) => (e.id === data.id ? data : e)),
+      ]);
+    });
+
+    socket.on("timeline-updated", (data: IncidentTimelineType) => {
+      setIncidents((prevIncidents) =>
+        prevIncidents.map((i) =>
+          i.id === data.incidentId
+            ? { ...i, IncidentTimeline: [data, ...i.IncidentTimeline] }
+            : i,
+        ),
+      );
+    });
 
     return () => {
-      socket.off("new-component");
-      socket.off("component-deleted");
-      socket.off("component-update");
+      socket.removeAllListeners();
     };
   }, [orgId, status, socket]);
 
@@ -106,18 +129,26 @@ const PublicStatus = () => {
             <div className="space-y-2">
               <h1 className="text-lg font-semibold">Incidents</h1>
               <div className="space-y-2 rounded-lg">
-                {incidents?.map((data, index) => (
-                  <Card key={index} className="">
+                {incidents?.map((data) => (
+                  <Card key={data.id}>
                     <CardHeader>
                       <div className="flex items-center justify-between">
-                        <CardTitle>{data.title}</CardTitle>
+                        <CardTitle className="text-lg">{data.title}</CardTitle>
                         <IncidentStatusBadge status={data.status} />
                       </div>
-                      <CardDescription>{data.description}</CardDescription>
+                      <CardDescription className="text-xs">
+                        <div className="text-white/90">{data.description}</div>
+                        <div>
+                          {format(
+                            new Date(data.createdAt),
+                            "MMM dd, yyyy hh:mm:ss a",
+                          )}
+                        </div>
+                      </CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-2">
                       {data.IncidentTimeline.map((timeline) => (
-                        <Alert className="space-y-3">
+                        <Alert className="space-y-3" key={timeline.id}>
                           <IncidentStatusBadge status={timeline.status} />
                           <AlertTitle className="text-xs font-normal text-white/60">
                             {format(

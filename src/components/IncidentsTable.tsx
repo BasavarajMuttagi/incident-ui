@@ -19,7 +19,7 @@ export type IncidentTableType = {
   occuredAt: Date;
   createdAt: Date;
 };
-type IncidentTimelineType = {
+export type IncidentTimelineType = {
   orgId: string;
   id: string;
   status: IncidentStatus;
