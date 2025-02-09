@@ -95,6 +95,17 @@ const columns: ColumnDef<IncidentTableType>[] = [
     header: () => <div />,
     cell: ({ row }) => {
       const incident = row.original;
+      if (incident.status === "RESOLVED") {
+        return (
+          <Button
+            disabled
+            variant="ghost"
+            className="text-blue-500 hover:bg-blue-400/10 hover:text-blue-600"
+          >
+            Record update
+          </Button>
+        );
+      }
       return <IncidentTimelineForm incidentId={incident.id} />;
     },
     enableSorting: false,

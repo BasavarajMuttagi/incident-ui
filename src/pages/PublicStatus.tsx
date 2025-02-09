@@ -8,12 +8,26 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import useSocket from "@/hooks/useSocket";
 import { cn } from "@/lib/utils";
+import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 
 const PublicStatus = () => {
   const { orgId } = useParams();
-  console.log(orgId);
+  const { socket, status } = useSocket();
+  useEffect(() => {
+    if (!socket || status !== "connected" || !orgId) return;
+
+    socket.emit("join", orgId);
+    socket.on(orgId, (data) => {
+      console.log(data);
+    });
+    return () => {
+      socket.off(orgId);
+    };
+  }, [orgId, status, socket]);
+
   return (
     <div className="h-screen">
       <ScrollArea className="h-full">

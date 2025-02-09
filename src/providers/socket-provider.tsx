@@ -2,7 +2,7 @@ import { useAuth, useUser } from "@clerk/clerk-react";
 import React, { createContext, useEffect, useState } from "react";
 import io, { Socket } from "socket.io-client";
 
-const VITE_BASE_URL = import.meta.env.VITE_BASE_URL;
+const VITE_SOCKET = import.meta.env.VITE_SOCKET;
 
 type SocketStatus =
   | "connected"
@@ -41,7 +41,7 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({
       try {
         const token = await getToken();
 
-        newSocket = io(VITE_BASE_URL, {
+        newSocket = io(VITE_SOCKET, {
           extraHeaders: { authorization: `Bearer ${token}` },
           reconnectionAttempts: 5,
           autoConnect: false,
