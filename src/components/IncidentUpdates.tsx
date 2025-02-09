@@ -1,7 +1,5 @@
 import { useApiClient } from "@/axios/useApiClient";
-import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
-import { incidentStatusConfig } from "@/lib/utils";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
@@ -9,10 +7,11 @@ import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { DataTable } from "./DataTable";
+import { IncidentStatusBadge } from "./IncidentStatusBadge";
 import { IncidentTimelineForm } from "./IncidentTimelineForm";
 import { Button } from "./ui/button";
 import { Skeleton } from "./ui/skeleton";
-type IncidentStatus =
+export type IncidentStatus =
   | "INVESTIGATING"
   | "IDENTIFIED"
   | "MONITORING"
@@ -54,17 +53,7 @@ const columns: ColumnDef<IncidentUpdateType>[] = [
     header: "Status",
     cell: ({ row }) => {
       const status = row.getValue("status") as IncidentUpdateType["status"];
-
-      const StatusIcon = incidentStatusConfig[status].icon;
-
-      return (
-        <Badge
-          className={`rounded-md ${incidentStatusConfig[status].color} hover:${incidentStatusConfig[status].color} flex w-fit items-center gap-2`}
-        >
-          <StatusIcon className="h-4 w-4" />
-          {incidentStatusConfig[status].label}
-        </Badge>
-      );
+      return <IncidentStatusBadge status={status} />;
     },
   },
   {

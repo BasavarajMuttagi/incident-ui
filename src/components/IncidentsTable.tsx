@@ -1,7 +1,5 @@
 import { useApiClient } from "@/axios/useApiClient";
-import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
-import { incidentStatusConfig } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
@@ -9,24 +7,36 @@ import { Edit, Loader2, Trash } from "lucide-react";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import { DataTable } from "./DataTable";
+import { IncidentStatusBadge } from "./IncidentStatusBadge";
 import { IncidentTimelineForm } from "./IncidentTimelineForm";
+import { IncidentStatus } from "./IncidentUpdates";
 import { Button } from "./ui/button";
 import { Skeleton } from "./ui/skeleton";
 export type IncidentTableType = {
   id: string;
   title: string;
-  status: "INVESTIGATING" | "IDENTIFIED" | "MONITORING" | "RESOLVED";
+  status: IncidentStatus;
   occuredAt: Date;
   createdAt: Date;
 };
-
-type IncidentType = {
+type IncidentTimelineType = {
+  orgId: string;
+  id: string;
+  status: IncidentStatus;
+  createdAt: Date;
+  updatedAt: Date;
+  incidentId: string;
+  userId: string;
+  message: string;
+};
+export type IncidentType = {
   orgId: string;
   userId: string;
   id: string;
   description: string;
-  status: "INVESTIGATING" | "IDENTIFIED" | "MONITORING" | "RESOLVED";
+  status: IncidentStatus;
   createdAt: Date;
+  IncidentTimeline: IncidentTimelineType[];
   title: string;
   occuredAt: Date;
   resolvedAt: Date | null;
@@ -61,17 +71,7 @@ const columns: ColumnDef<IncidentTableType>[] = [
     header: "Status",
     cell: ({ row }) => {
       const status = row.getValue("status") as IncidentTableType["status"];
-
-      const StatusIcon = incidentStatusConfig[status].icon;
-
-      return (
-        <Badge
-          className={`rounded-md ${incidentStatusConfig[status].color} hover:${incidentStatusConfig[status].color} flex w-fit items-center gap-2`}
-        >
-          <StatusIcon className="h-4 w-4" />
-          {incidentStatusConfig[status].label}
-        </Badge>
-      );
+      return <IncidentStatusBadge status={status} />;
     },
   },
   {

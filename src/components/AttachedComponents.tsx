@@ -1,13 +1,12 @@
 import { useApiClient } from "@/axios/useApiClient";
-import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
-import { componentStatusConfig } from "@/lib/utils";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ColumnDef } from "@tanstack/react-table";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { ComponentType } from "./ComponentsTable";
+import { ComponentStatusBadge } from "./ComponentStatusBadge";
 import { DataTable } from "./DataTable";
 import { Button } from "./ui/button";
 import { Skeleton } from "./ui/skeleton";
@@ -50,17 +49,7 @@ const columns: ColumnDef<AttachedComponents>[] = [
     header: "Status",
     cell: ({ row }) => {
       const status = row.getValue("status") as ComponentType["status"];
-
-      const StatusIcon = componentStatusConfig[status].icon;
-
-      return (
-        <Badge
-          className={`rounded-md ${componentStatusConfig[status].color} hover:${componentStatusConfig[status].color} flex w-fit items-center gap-2`}
-        >
-          <StatusIcon className="h-4 w-4" />
-          {componentStatusConfig[status].label}
-        </Badge>
-      );
+      return <ComponentStatusBadge status={status} />;
     },
   },
 ];
