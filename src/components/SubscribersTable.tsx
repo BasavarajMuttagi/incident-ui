@@ -1,11 +1,11 @@
 import { useApiClient } from "@/axios/useApiClient";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
-import { Edit, Loader2, Trash } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Loader2, Trash } from "lucide-react";
+import { useState } from "react";
 import { toast } from "sonner";
 import { DataTable } from "./DataTable";
 import { Button } from "./ui/button";
@@ -96,36 +96,45 @@ const columns: ColumnDef<SubscriberTableType>[] = [
       return format(date, "MMM dd, yyyy hh:mm:ss a");
     },
   },
-  {
-    id: "edit",
-    header: () => <div />,
-    cell: ({ row }) => {
-      const subscriber = row.original;
-      return (
-        <Button
-          variant="ghost"
-          className="text-green-500 hover:bg-green-400/10 hover:text-green-600"
-          asChild
-        >
-          <Link to={`/subscribers/edit/${subscriber.id}`}>
-            <Edit className="h-4 w-4" /> <span>Edit</span>
-          </Link>
-        </Button>
-      );
-    },
-  },
+
   {
     id: "delete",
     header: () => <div />,
-    cell: () => (
-      <Button
-        variant="ghost"
-        size="icon"
-        className="text-red-500 hover:bg-red-400/10 hover:text-red-600"
-      >
-        <Trash className="h-4 w-4" />
-      </Button>
-    ),
+    cell: ({ row }) => {
+      const [isLoading, setLoading] = useState(false);
+      const queryClient = useQueryClient();
+      const data = row.original;
+      const { delete: deleteSubscriber } = useApiClient();
+      const handleDelete = async () => {
+        try {
+          setLoading(true);
+          await deleteSubscriber(`/subscriber/${data.id}`);
+          queryClient.refetchQueries({
+            queryKey: ["list-subscribers"],
+          });
+        } catch (error) {
+          console.log(error);
+          toast.error("error");
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      return (
+        <Button
+          variant="ghost"
+          size="icon"
+          className="text-red-500 hover:bg-red-400/10 hover:text-red-600"
+          onClick={() => handleDelete()}
+        >
+          {isLoading ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            <Trash className="h-4 w-4" />
+          )}
+        </Button>
+      );
+    },
   },
 ];
 
