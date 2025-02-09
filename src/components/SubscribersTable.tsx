@@ -100,41 +100,7 @@ const columns: ColumnDef<SubscriberTableType>[] = [
   {
     id: "delete",
     header: () => <div />,
-    cell: ({ row }) => {
-      const [isLoading, setLoading] = useState(false);
-      const queryClient = useQueryClient();
-      const data = row.original;
-      const { delete: deleteSubscriber } = useApiClient();
-      const handleDelete = async () => {
-        try {
-          setLoading(true);
-          await deleteSubscriber(`/subscriber/${data.id}`);
-          queryClient.refetchQueries({
-            queryKey: ["list-subscribers"],
-          });
-        } catch (error) {
-          console.log(error);
-          toast.error("error");
-        } finally {
-          setLoading(false);
-        }
-      };
-
-      return (
-        <Button
-          variant="ghost"
-          size="icon"
-          className="text-red-500 hover:bg-red-400/10 hover:text-red-600"
-          onClick={() => handleDelete()}
-        >
-          {isLoading ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
-          ) : (
-            <Trash className="h-4 w-4" />
-          )}
-        </Button>
-      );
-    },
+    cell: ({ row }) => <DeleteButton id={row.original.id} />,
   },
 ];
 
@@ -172,3 +138,38 @@ export function SubscribersTable() {
     </div>
   );
 }
+
+const DeleteButton = ({ id }: { id: string }) => {
+  const [isLoading, setLoading] = useState(false);
+  const queryClient = useQueryClient();
+  const { delete: deleteSubscriber } = useApiClient();
+  const handleDelete = async () => {
+    try {
+      setLoading(true);
+      await deleteSubscriber(`/subscriber/${id}`);
+      queryClient.refetchQueries({
+        queryKey: ["list-subscribers"],
+      });
+    } catch (error) {
+      console.log(error);
+      toast.error("error");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <Button
+      variant="ghost"
+      size="icon"
+      className="text-red-500 hover:bg-red-400/10 hover:text-red-600"
+      onClick={() => handleDelete()}
+    >
+      {isLoading ? (
+        <Loader2 className="h-4 w-4 animate-spin" />
+      ) : (
+        <Trash className="h-4 w-4" />
+      )}
+    </Button>
+  );
+};

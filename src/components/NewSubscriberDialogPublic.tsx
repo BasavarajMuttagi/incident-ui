@@ -8,7 +8,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
+import { isAxiosError } from "axios";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -22,33 +23,33 @@ import {
   DialogTrigger,
 } from "./ui/dialog";
 import { Input } from "./ui/input";
-import { isAxiosError } from "axios";
 
 const formSchema = z.object({
   email: z.string().email("Invalid email address"),
+  orgId: z.string(),
 });
 
-export function NewSubscriberDialog() {
+export function NewSubscriberDialogPublic({ orgId }: { orgId: string }) {
   const [open, setOpen] = useState(false);
   const { post } = useApiClient();
-  const queryClient = useQueryClient();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       email: "",
+      orgId,
     },
   });
 
   const subscribeMutation = useMutation({
     mutationFn: async (values: z.infer<typeof formSchema>) => {
-      await post(`/subscriber`, values);
+      const result = await post(`/subscriber/public`, values);
+      return result.data;
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["list-subscribers"] });
+    onSuccess: (data) => {
       form.reset();
       setOpen(false);
-      toast.success("Verification email sent successfully");
+      toast.success(data.message);
     },
     onError: (error) => {
       if (isAxiosError(error)) {
@@ -68,15 +69,15 @@ export function NewSubscriberDialog() {
       <DialogTrigger asChild>
         <Button
           size="sm"
-          className="bg-green-600 text-white hover:bg-green-700"
+          className="rounded-sm bg-blue-500 text-white hover:bg-white hover:text-blue-500"
         >
-          New Subscriber
+          Subscribe To Updates
         </Button>
       </DialogTrigger>
       <DialogContent className="bg-zinc-900">
         <DialogHeader>
           <DialogTitle className="text-lg font-semibold">
-            Add New Subscriber
+            Subscribe Via Email
           </DialogTitle>
         </DialogHeader>
         <Form {...form}>
