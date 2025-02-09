@@ -9,9 +9,11 @@ import Incidents from "@/pages/Incidents";
 import Landing from "@/pages/Landing";
 import NotFound from "@/pages/NotFound";
 import Onboarding from "@/pages/Onboarding";
+import PublicStatus from "@/pages/PublicStatus";
 import Subscribers from "@/pages/Subscribers";
 import { Unsubscribe } from "@/pages/Unsubscribe";
 import { Verify } from "@/pages/Verify";
+import { SocketProvider } from "@/providers/socket-provider";
 import { createBrowserRouter } from "react-router-dom";
 import Onboard from "./Onboard";
 import Private from "./Private";
@@ -20,6 +22,14 @@ import Public from "./Public";
 const routes = createBrowserRouter([
   { path: "/verify", element: <Verify /> },
   { path: "/unsubscribe", element: <Unsubscribe /> },
+  {
+    path: "/status/:orgId",
+    element: (
+      <SocketProvider>
+        <PublicStatus />
+      </SocketProvider>
+    ),
+  },
   {
     element: <Public />,
     children: [

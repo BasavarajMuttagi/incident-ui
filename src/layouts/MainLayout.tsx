@@ -1,15 +1,12 @@
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { SidebarProvider } from "@/components/ui/sidebar";
-import { SocketProvider } from "@/providers/socket-provider";
 import { ReactNode } from "react";
 
 const MainLayout = ({ children }: { children: ReactNode }) => {
   return (
-    <SocketProvider>
-      <SidebarProvider>
-        <div className="flex h-screen w-full overflow-hidden">{children}</div>
-      </SidebarProvider>
-    </SocketProvider>
+    <SidebarProvider>
+      <div className="flex h-screen w-full overflow-hidden">{children}</div>
+    </SidebarProvider>
   );
 };
 
