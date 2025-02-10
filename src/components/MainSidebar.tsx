@@ -1,3 +1,4 @@
+import logo from "@/assets/react.svg";
 import {
   Sidebar,
   SidebarContent,
@@ -25,7 +26,6 @@ import {
   Users,
 } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
-
 interface MenuItem {
   icon: LucideIcon;
   label: string;
@@ -44,7 +44,7 @@ const mainMenuItems: MenuItem[] = [
 const secondaryMenuItems: MenuItem[] = [
   { icon: BookOpen, label: "Documentation", path: "/docs" },
   { icon: MessageSquare, label: "Join Discord", path: "/discord" },
-  { icon: Heart, label: "Sponsor Cachet", path: "/sponsor" },
+  { icon: Heart, label: "Sponsor IncidentPulse", path: "/sponsor" },
 ];
 
 const MainSidebar = () => {
@@ -73,8 +73,8 @@ const MainSidebar = () => {
     <Sidebar className="flex h-screen flex-col text-xl">
       <SidebarHeader className="my-2">
         <div className="flex items-center space-x-2">
-          <div className="h-8 w-8 rounded-lg bg-green-500" />
-          <span className="text-lg font-bold">Incident</span>
+          <img src={logo} />
+          <span className="text-lg font-bold">IncidentPulse</span>
         </div>
       </SidebarHeader>
 

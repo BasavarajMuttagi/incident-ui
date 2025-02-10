@@ -9,6 +9,7 @@ import Incidents from "@/pages/Incidents";
 import Landing from "@/pages/Landing";
 import MaintenanceEditForm from "@/pages/MaintenanceEditForm";
 import { MaintenanceForm } from "@/pages/MaintenanceForm";
+import Metrics from "@/pages/Metrics";
 import NotFound from "@/pages/NotFound";
 import Onboarding from "@/pages/Onboarding";
 import PublicStatus from "@/pages/PublicStatus";
@@ -52,6 +53,7 @@ const routes = createBrowserRouter([
         element: <MainLayoutWrapper />,
         children: [
           { path: "/dashboard", element: <Dashboard /> },
+          { path: "/metrics", element: <Metrics /> },
           {
             path: "/components",
             children: [
