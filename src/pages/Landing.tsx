@@ -41,18 +41,11 @@ export default function LandingPage() {
 
         <div className="flex items-center space-x-4">
           <Button
-            className="hidden rounded-full bg-white px-6 text-sm text-black hover:bg-gray-200 md:inline-flex"
+            className="rounded-full bg-white px-6 text-sm text-black hover:bg-gray-200 md:inline-flex"
             asChild
           >
             <Link to="/login">Login</Link>
           </Button>
-
-          {/* <Button
-            className="rounded-full bg-blue-500 px-6 text-sm text-white hover:bg-blue-600"
-            asChild
-          >
-            <Link to={"/signup"}> Sign up</Link>
-          </Button> */}
         </div>
       </nav>
 
@@ -217,11 +210,11 @@ export default function LandingPage() {
           <div className="grid grid-cols-2 gap-8 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
             {[
               "https://upload.wikimedia.org/wikipedia/commons/1/1d/Perplexity_AI_logo.svg",
-              "https://mistral.ai/images/partners/snowflake.png",
+              "https://upload.wikimedia.org/wikipedia/commons/7/78/Anthropic_logo.svg",
               "https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg",
               "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg",
               "https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg",
-              "https://mistral.ai/images/partners/cloudflare.png",
+              "https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Netflix_2015_logo.svg/2560px-Netflix_2015_logo.svg.png",
             ].map((logo, index) => (
               <div key={index}>
                 <img
@@ -243,7 +236,7 @@ export default function LandingPage() {
         <div className="relative mx-auto max-w-4xl text-center">
           <h2 className="mb-4 text-3xl font-bold">Ready to get started?</h2>
           <p className="mb-8 text-gray-400">
-            Join thousands of teams using StatusHub to keep their services
+            Join thousands of teams using IncidentPulse to keep their services
             reliable and users happy.
           </p>
           <Button className="h-12 rounded-full bg-blue-500 px-8 text-sm text-white hover:bg-blue-600">
@@ -258,8 +251,8 @@ export default function LandingPage() {
       <footer className="border-t border-white/[0.08] px-6 py-12">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between space-y-4 md:flex-row md:space-y-0">
           <div className="flex items-center space-x-2">
-            <div className="h-8 w-8 rounded-lg bg-gradient-to-tr from-blue-500 to-blue-600"></div>
-            <span className="text-lg font-medium">StatusHub</span>
+            <img src={logo} />
+            <span className="text-lg font-medium">IncidentPulse</span>
           </div>
           <div className="flex flex-wrap justify-center gap-4 text-sm text-gray-400 sm:gap-8">
             <Link to="#" className="transition-colors hover:text-white">
