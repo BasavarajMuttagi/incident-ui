@@ -207,6 +207,7 @@ const CompleteButton = ({ id }: { id: string }) => {
       });
       toast.success("Maintenance completed successfully");
     } catch (error) {
+      console.log(error);
       toast.error("Failed to complete maintenance");
     } finally {
       setLoading(false);

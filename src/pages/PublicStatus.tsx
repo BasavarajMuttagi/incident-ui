@@ -6,7 +6,10 @@ import {
 } from "@/components/IncidentsTable";
 import { IncidentStatusBadge } from "@/components/IncidentStatusBadge";
 import { MaintenanceStatusBadge } from "@/components/MaintenanceStatusBadge";
-import { MaintenanceType } from "@/components/MaintenanceTable";
+import {
+  MaintenanceTimelineType,
+  MaintenanceType,
+} from "@/components/MaintenanceTable";
 import { NewSubscriberDialogPublic } from "@/components/NewSubscriberDialogPublic";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
@@ -99,6 +102,19 @@ const PublicStatus = () => {
         ...prevMaintenances.map((e) => (e.id === data.id ? data : e)),
       ]);
     });
+
+    socket.on(
+      "maintenance-timeline-updated",
+      (data: MaintenanceTimelineType) => {
+        setMaintenances((prevIncidents) =>
+          prevIncidents.map((i) =>
+            i.id === data.maintenanceId
+              ? { ...i, timeline: [data, ...i.timeline] }
+              : i,
+          ),
+        );
+      },
+    );
 
     return () => {
       socket.removeAllListeners();
