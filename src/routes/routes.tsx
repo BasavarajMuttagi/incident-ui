@@ -47,11 +47,10 @@ const routes = createBrowserRouter([
     children: [
       {
         element: <MainLayoutWrapper />,
-        path: "org/:orgId",
         children: [
-          { path: "dashboard", element: <Dashboard /> },
+          { path: "/dashboard", element: <Dashboard /> },
           {
-            path: "components",
+            path: "/components",
             children: [
               { path: "", element: <Components /> },
               { path: "component/create", element: <ComponentForm /> },
@@ -62,7 +61,7 @@ const routes = createBrowserRouter([
             ],
           },
           {
-            path: "incidents",
+            path: "/incidents",
             children: [
               { path: "", element: <Incidents /> },
               { path: "incident/create", element: <IncidentForm /> },
@@ -73,7 +72,7 @@ const routes = createBrowserRouter([
             ],
           },
           {
-            path: "subscribers",
+            path: "/subscribers",
             element: <Subscribers />,
           },
         ],

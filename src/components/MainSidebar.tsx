@@ -9,8 +9,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { useOrgRoute } from "@/hooks/useOrgRoute";
-import { UserButton } from "@clerk/clerk-react";
+import { useAuth, UserButton } from "@clerk/clerk-react";
 import { dark } from "@clerk/themes";
 import {
   AlertTriangle,
@@ -34,22 +33,22 @@ interface MenuItem {
 }
 
 const mainMenuItems: MenuItem[] = [
-  { icon: LayoutDashboard, label: "Dashboard", path: "dashboard" },
-  { icon: Box, label: "Components", path: "components" },
-  { icon: AlertTriangle, label: "Incidents", path: "incidents" },
-  { icon: BarChart2, label: "Metrics", path: "metrics" },
-  { icon: Calendar, label: "Schedules", path: "schedules" },
-  { icon: Users, label: "Subscribers", path: "subscribers" },
+  { icon: LayoutDashboard, label: "Dashboard", path: "/dashboard" },
+  { icon: Box, label: "Components", path: "/components" },
+  { icon: AlertTriangle, label: "Incidents", path: "/incidents" },
+  { icon: BarChart2, label: "Metrics", path: "/metrics" },
+  { icon: Calendar, label: "Schedules", path: "/schedules" },
+  { icon: Users, label: "Subscribers", path: "/subscribers" },
 ];
 
 const secondaryMenuItems: MenuItem[] = [
-  { icon: BookOpen, label: "Documentation", path: "docs" },
-  { icon: MessageSquare, label: "Join Discord", path: "discord" },
-  { icon: Heart, label: "Sponsor Cachet", path: "sponsor" },
+  { icon: BookOpen, label: "Documentation", path: "/docs" },
+  { icon: MessageSquare, label: "Join Discord", path: "/discord" },
+  { icon: Heart, label: "Sponsor Cachet", path: "/sponsor" },
 ];
 
 const MainSidebar = () => {
-  const { orgId, getOrgRoute } = useOrgRoute();
+  const { orgId } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
   const isActiveRoute = (path: string) => {
@@ -60,8 +59,8 @@ const MainSidebar = () => {
     return items.map(({ icon: Icon, label, path }) => (
       <SidebarMenuItem key={label}>
         <SidebarMenuButton
-          className={`w-full ${isActiveRoute(getOrgRoute(path)) ? "bg-zinc-700" : ""}`}
-          onClick={() => navigate(getOrgRoute(path))}
+          className={`w-full ${isActiveRoute(path) ? "bg-zinc-700" : ""}`}
+          onClick={() => navigate(path)}
         >
           <Icon className="mr-3" />
           <span>{label}</span>

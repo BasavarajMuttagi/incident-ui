@@ -10,7 +10,6 @@ import { ComponentStatusBadge } from "./ComponentStatusBadge";
 import { DataTable } from "./DataTable";
 import { Button } from "./ui/button";
 import { Skeleton } from "./ui/skeleton";
-import { useOrgRoute } from "@/hooks/useOrgRoute";
 
 export type ComponentType = {
   orgId: string;
@@ -60,14 +59,14 @@ const columns: ColumnDef<ComponentType>[] = [
     header: "Edit",
     cell: ({ row }) => {
       const component = row.original;
-      const { getOrgRoute } = useOrgRoute();
+
       return (
         <Button
           variant="ghost"
           className="text-green-500 hover:bg-green-400/10 hover:text-green-600"
           asChild
         >
-          <Link to={getOrgRoute(`components/component/edit/${component.id}`)}>
+          <Link to={`/components/component/edit/${component.id}`}>
             <Edit className="h-4 w-4" /> <span>Edit</span>
           </Link>
         </Button>
