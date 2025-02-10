@@ -9,7 +9,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { UserButton } from "@clerk/clerk-react";
+import { useAuth, UserButton } from "@clerk/clerk-react";
 import { dark } from "@clerk/themes";
 import {
   AlertTriangle,
@@ -42,13 +42,13 @@ const mainMenuItems: MenuItem[] = [
 ];
 
 const secondaryMenuItems: MenuItem[] = [
-  { icon: Link, label: "Status Page", path: "/status" },
   { icon: BookOpen, label: "Documentation", path: "/docs" },
   { icon: MessageSquare, label: "Join Discord", path: "/discord" },
   { icon: Heart, label: "Sponsor Cachet", path: "/sponsor" },
 ];
 
 const MainSidebar = () => {
+  const { orgId } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
   const isActiveRoute = (path: string) => {
@@ -87,6 +87,15 @@ const MainSidebar = () => {
 
         <SidebarGroup>
           <SidebarGroupContent>
+            <SidebarMenu>
+              {renderMenuItems([
+                {
+                  icon: Link,
+                  label: "Status Page",
+                  path: `/status/${orgId}`,
+                },
+              ])}
+            </SidebarMenu>
             <SidebarMenu>{renderMenuItems(secondaryMenuItems)}</SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
