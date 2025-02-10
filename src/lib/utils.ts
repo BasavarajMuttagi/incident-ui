@@ -207,18 +207,31 @@ export const maintenanceStatusOptions = [
 ] as const;
 
 export const calculateMaintenanceStatus = (
-  startAt: Date,
-  endAt: Date,
+  startAt: string,
+  endAt: string | null,
 ): "SCHEDULED" | "IN_PROGRESS" | "COMPLETED" | "CANCELLED" => {
   const now = new Date();
+  const startDate = new Date(startAt);
+  const endDate = endAt ? new Date(endAt) : null;
 
-  if (now < new Date(startAt)) {
+  // For future maintenance
+  if (startDate > now) {
     return "SCHEDULED";
-  } else if (now >= new Date(startAt) && now <= new Date(endAt)) {
-    return "IN_PROGRESS";
-  } else if (now > new Date(endAt)) {
-    return "COMPLETED";
   }
 
-  return "SCHEDULED"; // Default status
+  // For ongoing maintenance (started but no end date)
+  if (!endDate && startDate <= now) {
+    return "IN_PROGRESS";
+  }
+
+  // For maintenance with end date
+  if (endDate) {
+    if (now <= endDate) {
+      return "IN_PROGRESS";
+    } else {
+      return "COMPLETED";
+    }
+  }
+
+  return "SCHEDULED"; // Default fallback
 };

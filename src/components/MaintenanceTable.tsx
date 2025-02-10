@@ -10,20 +10,30 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import { DataTable } from "./DataTable";
+import { IncidentStatus } from "./IncidentUpdates";
 import { Button } from "./ui/button";
-
-type MaintenanceTableType = {
+export type MaintenanceTimelineType = {
+  id: string;
+  orgId: string;
+  createdAt: Date;
+  updatedAt: Date;
+  userId: string;
+  message: string;
+  status: IncidentStatus;
+  maintenanceId: string;
+};
+export type MaintenanceType = {
   id: string;
   title: string;
   description: string;
-  status: "SCHEDULED" | "IN_PROGRESS" | "COMPLETED" | "CANCELLED";
   startAt: string;
   endAt: string;
+  timeline: MaintenanceTimelineType[];
   createdAt: string;
   updatedAt: string;
 };
 
-const columns: ColumnDef<MaintenanceTableType>[] = [
+const columns: ColumnDef<MaintenanceType>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -49,8 +59,8 @@ const columns: ColumnDef<MaintenanceTableType>[] = [
     header: "Status",
     cell: ({ row }) => {
       const status = calculateMaintenanceStatus(
-        new Date(row.original.startAt),
-        new Date(row.original.endAt),
+        row.original.startAt,
+        row.original.endAt,
       );
       return <MaintenanceStatusBadge status={status} text />;
     },
@@ -67,7 +77,11 @@ const columns: ColumnDef<MaintenanceTableType>[] = [
     accessorKey: "endAt",
     header: "End at",
     cell: ({ row }) => {
-      const date = new Date(row.getValue("endAt"));
+      const data = row.getValue("endAt") as Date;
+      if (!data) {
+        return;
+      }
+      const date = new Date(data);
       return format(date, "MMM dd, yyyy hh:mm:ss a");
     },
   },
@@ -76,8 +90,19 @@ const columns: ColumnDef<MaintenanceTableType>[] = [
     id: "actions",
     header: "Actions",
     cell: ({ row }) => {
+      const status = calculateMaintenanceStatus(
+        row.original.startAt,
+        row.original.endAt,
+      );
       return (
         <div className="flex items-center gap-2">
+          {status === "COMPLETED" ? (
+            <Button variant="link" className="text-green-600" disabled>
+              Complete Maintenance
+            </Button>
+          ) : (
+            <CompleteButton id={row.original.id} />
+          )}
           <Button
             variant="outline"
             size="icon"
@@ -100,7 +125,7 @@ const columns: ColumnDef<MaintenanceTableType>[] = [
 export function MaintenanceTable() {
   const { get } = useApiClient();
 
-  const { data: ListData, isLoading } = useQuery<MaintenanceTableType[]>({
+  const { data: ListData, isLoading } = useQuery<MaintenanceType[]>({
     queryKey: ["list-maintenance"],
     queryFn: async () => {
       try {
@@ -161,6 +186,47 @@ const DeleteButton = ({ id }: { id: string }) => {
         <Loader2 className="h-4 w-4 animate-spin" />
       ) : (
         <Trash className="h-4 w-4 text-red-400" />
+      )}
+    </Button>
+  );
+};
+
+const CompleteButton = ({ id }: { id: string }) => {
+  const [isLoading, setLoading] = useState(false);
+  const queryClient = useQueryClient();
+  const { patch } = useApiClient();
+
+  const handleComplete = async () => {
+    try {
+      setLoading(true);
+      await patch(`/maintenance/${id}`, {
+        endAt: new Date().toISOString(),
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["list-maintenance"],
+      });
+      toast.success("Maintenance completed successfully");
+    } catch (error) {
+      toast.error("Failed to complete maintenance");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <Button
+      variant="link"
+      onClick={handleComplete}
+      disabled={isLoading}
+      className="text-green-600"
+    >
+      {isLoading ? (
+        <div className="flex items-center gap-2">
+          <Loader2 className="h-4 w-4 animate-spin" />
+          <span>Completing...</span>
+        </div>
+      ) : (
+        "Complete Maintenance"
       )}
     </Button>
   );

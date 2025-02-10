@@ -1,5 +1,4 @@
 import { useApiClient } from "@/axios/useApiClient";
-import { maintenanceStatusOptions } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
@@ -18,7 +17,6 @@ import {
 } from "../components/ui/form";
 import { Input } from "../components/ui/input";
 import { Textarea } from "../components/ui/textarea";
-import { ToggleGroup, ToggleGroupItem } from "../components/ui/toggle-group";
 
 const formSchema = z.object({
   title: z.string().min(1, "Title is required"),
@@ -29,9 +27,12 @@ const formSchema = z.object({
   startAt: z.string().refine((date) => !isNaN(Date.parse(date)), {
     message: "Invalid date format",
   }),
-  endAt: z.string().refine((date) => !isNaN(Date.parse(date)), {
-    message: "Invalid date format",
-  }),
+  endAt: z
+    .string()
+    .refine((date) => !date || !isNaN(Date.parse(date)), {
+      message: "Invalid date format",
+    })
+    .optional(),
 });
 
 export function MaintenanceForm() {
@@ -97,38 +98,6 @@ export function MaintenanceForm() {
               )}
             />
 
-            <FormField
-              control={form.control}
-              name="status"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-white">
-                    Status<span className="text-red-500"> *</span>
-                  </FormLabel>
-                  <FormControl>
-                    <ToggleGroup
-                      type="single"
-                      value={field.value}
-                      onValueChange={field.onChange}
-                      className="flex flex-wrap justify-start gap-2"
-                    >
-                      {maintenanceStatusOptions.map((option) => (
-                        <ToggleGroupItem
-                          key={option.value}
-                          value={option.value}
-                          className={`flex items-center gap-2 px-4 py-2 ${option.className}`}
-                        >
-                          <option.icon className="h-4 w-4" />
-                          {option.label}
-                        </ToggleGroupItem>
-                      ))}
-                    </ToggleGroup>
-                  </FormControl>
-                  <FormMessage className="text-red-500" />
-                </FormItem>
-              )}
-            />
-
             <div className="grid grid-cols-2 gap-4">
               <FormField
                 control={form.control}
@@ -155,9 +124,7 @@ export function MaintenanceForm() {
                 name="endAt"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-white">
-                      End Time<span className="text-red-500"> *</span>
-                    </FormLabel>
+                    <FormLabel className="text-white">End Time</FormLabel>
                     <FormControl>
                       <Input
                         type="datetime-local"

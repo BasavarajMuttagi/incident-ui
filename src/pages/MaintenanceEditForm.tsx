@@ -45,9 +45,12 @@ const formSchema = z.object({
   startAt: z.string().refine((val) => !isNaN(Date.parse(val)), {
     message: "Please enter a valid date and time",
   }),
-  endAt: z.string().refine((val) => !isNaN(Date.parse(val)), {
-    message: "Please enter a valid date and time",
-  }),
+  endAt: z
+    .string()
+    .refine((date) => !date || !isNaN(Date.parse(date)), {
+      message: "Invalid date format",
+    })
+    .optional(),
 });
 
 function MaintenanceEditForm() {
@@ -93,7 +96,7 @@ function MaintenanceEditForm() {
           title,
           description,
           startAt: formatISO(new Date(startAt)).slice(0, 16),
-          endAt: formatISO(new Date(endAt)).slice(0, 16),
+          endAt: endAt ? formatISO(new Date(endAt)).slice(0, 16) : undefined,
         });
         return response.data;
       } catch (error) {
@@ -174,9 +177,7 @@ function MaintenanceEditForm() {
                 name="endAt"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-white">
-                      End Time<span className="text-red-500"> *</span>
-                    </FormLabel>
+                    <FormLabel className="text-white">End Time</FormLabel>
                     <FormControl>
                       <Input
                         type="datetime-local"

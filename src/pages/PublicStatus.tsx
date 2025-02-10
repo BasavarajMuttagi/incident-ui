@@ -5,6 +5,8 @@ import {
   IncidentType,
 } from "@/components/IncidentsTable";
 import { IncidentStatusBadge } from "@/components/IncidentStatusBadge";
+import { MaintenanceStatusBadge } from "@/components/MaintenanceStatusBadge";
+import { MaintenanceType } from "@/components/MaintenanceTable";
 import { NewSubscriberDialogPublic } from "@/components/NewSubscriberDialogPublic";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
@@ -16,16 +18,17 @@ import {
 } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import useSocket from "@/hooks/useSocket";
-import { cn } from "@/lib/utils";
+import { calculateMaintenanceStatus, cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-
 const PublicStatus = () => {
   const { orgId } = useParams();
   const { socket, status } = useSocket();
   const [components, setComponents] = useState<ComponentType[]>([]);
   const [incidents, setIncidents] = useState<IncidentType[]>([]);
+  const [maintenances, setMaintenances] = useState<MaintenanceType[]>([]);
+
   const hasNonOperationalComponent = components.some(
     (component) => component.status !== "OPERATIONAL",
   );
@@ -39,6 +42,13 @@ const PublicStatus = () => {
     socket.emit("get-incidents", orgId, (incidents: IncidentType[]) => {
       setIncidents(incidents);
     });
+    socket.emit(
+      "get-maintenances",
+      orgId,
+      (maintenances: MaintenanceType[]) => {
+        setMaintenances(maintenances);
+      },
+    );
     socket.on("new-component", (data: ComponentType) => {
       console.log(data);
       setComponents((prev) => [data, ...prev]);
@@ -74,6 +84,20 @@ const PublicStatus = () => {
             : i,
         ),
       );
+    });
+
+    socket.on("new-maintenance", (data: MaintenanceType) => {
+      setMaintenances((prev) => [data, ...prev]);
+    });
+
+    socket.on("maintenance-deleted", (id: string) => {
+      setMaintenances((prev) => prev.filter((p) => p.id !== id));
+    });
+
+    socket.on("maintenance-updated", (data: MaintenanceType) => {
+      setMaintenances((prevMaintenances) => [
+        ...prevMaintenances.map((e) => (e.id === data.id ? data : e)),
+      ]);
     });
 
     return () => {
@@ -150,6 +174,66 @@ const PublicStatus = () => {
                     </CardHeader>
                     <CardContent className="space-y-2">
                       {data.IncidentTimeline.map((timeline) => (
+                        <Alert className="space-y-3" key={timeline.id}>
+                          <IncidentStatusBadge status={timeline.status} />
+                          <AlertTitle className="text-xs font-normal text-white/60">
+                            {format(
+                              new Date(timeline.createdAt),
+                              "MMM dd, yyyy hh:mm:ss a",
+                            )}
+                          </AlertTitle>
+                          <AlertDescription className="text-sm font-medium">
+                            {timeline.message}
+                          </AlertDescription>
+                        </Alert>
+                      ))}
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </div>
+            <div className="space-y-2">
+              <h1 className="text-lg font-semibold">Scheduled Maintenance</h1>
+              <div className="space-y-2 rounded-lg">
+                {maintenances?.map((data) => (
+                  <Card key={data.id}>
+                    <CardHeader>
+                      <div className="flex items-center justify-between">
+                        <CardTitle className="text-lg">{data.title}</CardTitle>
+                        <MaintenanceStatusBadge
+                          status={calculateMaintenanceStatus(
+                            data.startAt,
+                            data.endAt,
+                          )}
+                        />
+                      </div>
+                      <CardDescription className="text-xs">
+                        <div className="mb-2 text-white/90">
+                          {data.description}
+                        </div>
+                        <div className="space-y-1">
+                          <div>
+                            Starts:
+                            {format(
+                              new Date(data.startAt),
+                              "MMM dd, yyyy hh:mm:ss a",
+                            )}
+                          </div>
+
+                          <div>
+                            Ends:
+                            {data.endAt
+                              ? format(
+                                  new Date(data.endAt),
+                                  "MMM dd, yyyy hh:mm:ss a",
+                                )
+                              : "---"}
+                          </div>
+                        </div>
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-2">
+                      {data.timeline.map((timeline) => (
                         <Alert className="space-y-3" key={timeline.id}>
                           <IncidentStatusBadge status={timeline.status} />
                           <AlertTitle className="text-xs font-normal text-white/60">

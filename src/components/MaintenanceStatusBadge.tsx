@@ -8,7 +8,7 @@ interface MaintenanceStatusBadgeProps {
 
 export function MaintenanceStatusBadge({
   status,
-  text = false,
+  text = true,
 }: MaintenanceStatusBadgeProps) {
   const config = maintenanceStatusConfig[status];
   const Icon = config.icon;
