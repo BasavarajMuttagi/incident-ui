@@ -1,5 +1,6 @@
 import { useApiClient } from "@/axios/useApiClient";
 import { Checkbox } from "@/components/ui/checkbox";
+import { useOrgRoute } from "@/hooks/useOrgRoute";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
@@ -117,14 +118,14 @@ const columns: ColumnDef<IncidentTableType>[] = [
     header: "Edit",
     cell: ({ row }) => {
       const incident = row.original;
-
+      const { getOrgRoute } = useOrgRoute();
       return (
         <Button
           variant="ghost"
           className="text-green-500 hover:bg-green-400/10 hover:text-green-600"
           asChild
         >
-          <Link to={`/incidents/incident/edit/${incident.id}`}>
+          <Link to={getOrgRoute(`incidents/incident/edit/${incident.id}`)}>
             <Edit className="h-4 w-4" /> <span>Edit</span>
           </Link>
         </Button>
