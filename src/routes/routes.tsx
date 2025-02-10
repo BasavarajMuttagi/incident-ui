@@ -7,9 +7,12 @@ import IncidentEditForm from "@/pages/IncidentEditForm";
 import { IncidentForm } from "@/pages/IncidentForm";
 import Incidents from "@/pages/Incidents";
 import Landing from "@/pages/Landing";
+import MaintenanceEditForm from "@/pages/MaintenanceEditForm";
+import { MaintenanceForm } from "@/pages/MaintenanceForm";
 import NotFound from "@/pages/NotFound";
 import Onboarding from "@/pages/Onboarding";
 import PublicStatus from "@/pages/PublicStatus";
+import Schedules from "@/pages/Schedules";
 import Subscribers from "@/pages/Subscribers";
 import { Unsubscribe } from "@/pages/Unsubscribe";
 import { Verify } from "@/pages/Verify";
@@ -68,6 +71,17 @@ const routes = createBrowserRouter([
               {
                 path: "incident/edit/:incidentId",
                 element: <IncidentEditForm />,
+              },
+            ],
+          },
+          {
+            path: "/schedules",
+            children: [
+              { path: "", element: <Schedules /> },
+              { path: "maintenance/create", element: <MaintenanceForm /> },
+              {
+                path: "maintenance/edit/:maintenanceId",
+                element: <MaintenanceEditForm />,
               },
             ],
           },

@@ -1,14 +1,17 @@
 import { clsx, type ClassValue } from "clsx";
-import { twMerge } from "tailwind-merge";
-import { ReactNode } from "react";
 import {
-  CheckCircle,
   Activity,
   AlertCircle,
-  XCircle,
+  Calendar,
+  CheckCircle,
+  CheckCircle2,
+  Clock,
   Search,
   Shield,
+  XCircle,
 } from "lucide-react";
+import { ReactNode } from "react";
+import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -151,4 +154,71 @@ export const componentStatusConfig = {
     icon: XCircle,
     label: "major outage",
   },
+};
+
+export const maintenanceStatusConfig = {
+  SCHEDULED: {
+    label: "Scheduled",
+    color: "bg-blue-500/10 text-blue-500 hover:bg-blue-500/20",
+    icon: Calendar,
+  },
+  IN_PROGRESS: {
+    label: "In Progress",
+    color: "bg-yellow-500/10 text-yellow-500 hover:bg-yellow-500/20",
+    icon: Clock,
+  },
+  COMPLETED: {
+    label: "Completed",
+    color: "bg-green-500/10 text-green-500 hover:bg-green-500/20",
+    icon: CheckCircle2,
+  },
+  CANCELLED: {
+    label: "Cancelled",
+    color: "bg-red-500/10 text-red-500 hover:bg-red-500/20",
+    icon: XCircle,
+  },
+};
+
+export const maintenanceStatusOptions = [
+  {
+    label: "Scheduled",
+    value: "SCHEDULED",
+    icon: Calendar,
+    className: "bg-blue-500/10 text-blue-500 hover:bg-blue-500/20",
+  },
+  {
+    label: "In Progress",
+    value: "IN_PROGRESS",
+    icon: Clock,
+    className: "bg-yellow-500/10 text-yellow-500 hover:bg-yellow-500/20",
+  },
+  {
+    label: "Completed",
+    value: "COMPLETED",
+    icon: CheckCircle2,
+    className: "bg-green-500/10 text-green-500 hover:bg-green-500/20",
+  },
+  {
+    label: "Cancelled",
+    value: "CANCELLED",
+    icon: XCircle,
+    className: "bg-red-500/10 text-red-500 hover:bg-red-500/20",
+  },
+] as const;
+
+export const calculateMaintenanceStatus = (
+  startAt: Date,
+  endAt: Date,
+): "SCHEDULED" | "IN_PROGRESS" | "COMPLETED" | "CANCELLED" => {
+  const now = new Date();
+
+  if (now < new Date(startAt)) {
+    return "SCHEDULED";
+  } else if (now >= new Date(startAt) && now <= new Date(endAt)) {
+    return "IN_PROGRESS";
+  } else if (now > new Date(endAt)) {
+    return "COMPLETED";
+  }
+
+  return "SCHEDULED"; // Default status
 };

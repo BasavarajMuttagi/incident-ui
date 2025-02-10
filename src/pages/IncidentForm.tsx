@@ -26,7 +26,7 @@ import { toast } from "sonner";
 import { z } from "zod";
 import { Button } from "../components/ui/button";
 import { ToggleGroup, ToggleGroupItem } from "../components/ui/toggle-group";
-type ComponentType = {
+export type ComponentType = {
   orgId: string;
   name: string;
   id: string;
