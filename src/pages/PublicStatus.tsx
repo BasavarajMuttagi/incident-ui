@@ -57,8 +57,7 @@ const PublicStatus = () => {
       setComponents((prev) => [data, ...prev]);
     });
     socket.on("component-deleted", (id: string) => {
-      console.log(id);
-      setComponents((prev) => prev.filter((p) => p.id === id));
+      setComponents((prev) => prev.filter((p) => p.id !== id));
     });
     socket.on("component-update", (data: ComponentType) => {
       setComponents((prevComponents) => [
@@ -70,7 +69,7 @@ const PublicStatus = () => {
     });
 
     socket.on("incident-deleted", (id: string) => {
-      setIncidents((prev) => prev.filter((p) => p.id === id));
+      setIncidents((prev) => prev.filter((p) => p.id !== id));
     });
 
     socket.on("incident-updated", (data: IncidentType) => {
@@ -111,6 +110,43 @@ const PublicStatus = () => {
             i.id === data.maintenanceId
               ? { ...i, timeline: [data, ...i.timeline] }
               : i,
+          ),
+        );
+      },
+    );
+
+    socket.on(
+      "incident-timeline-deleted",
+      (incidentId: string, updateId: string) => {
+        setIncidents((prevIncidents) =>
+          prevIncidents.map((incident) =>
+            incident.id === incidentId
+              ? {
+                  ...incident,
+                  IncidentTimeline: incident.IncidentTimeline.filter(
+                    (update) => update.id !== updateId,
+                  ),
+                }
+              : incident,
+          ),
+        );
+      },
+    );
+
+    socket.on(
+      "maintenance-timeline-deleted",
+      (maintenanceId: string, updateId: string) => {
+        console.log(maintenanceId, updateId);
+        setMaintenances((prevMaintenances) =>
+          prevMaintenances.map((maintenance) =>
+            maintenance.id === maintenanceId
+              ? {
+                  ...maintenance,
+                  timeline: maintenance.timeline.filter(
+                    (update) => update.id !== updateId,
+                  ),
+                }
+              : maintenance,
           ),
         );
       },
